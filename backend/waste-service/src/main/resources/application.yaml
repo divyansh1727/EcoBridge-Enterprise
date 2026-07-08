@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: waste-service
+
+  config:
+    import: "optional:configserver:"
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}

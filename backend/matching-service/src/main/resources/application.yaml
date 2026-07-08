@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: matching-service
+
+  profiles:
+    active: dev
+
+  config:
+    import: optional:configserver:http://localhost:8888
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
