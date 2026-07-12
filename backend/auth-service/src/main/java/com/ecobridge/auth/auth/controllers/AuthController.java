@@ -26,10 +26,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -165,11 +162,13 @@ public class AuthController {
         cookieService.addNoStoreHeaders(response);
         return ResponseEntity.ok(TokenResponse.of(newAccessToken, newRefreshToken, jwtService.getAccessTtlSeconds(), mapper.map(user, UserDto.class)));
 
+    }
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> me(Authentication authentication) {
 
+        User user = (User) authentication.getPrincipal();
 
-
-
-
+        return ResponseEntity.ok(mapper.map(user, UserDto.class));
     }
 
     @PostMapping("/logout")

@@ -2,7 +2,9 @@ package com.ecobridge.waste_service.service.impl;
 
 import com.ecobridge.waste_service.dto.request.CreateWasteRequest;
 import com.ecobridge.waste_service.dto.request.UpdateWasteRequest;
+import com.ecobridge.waste_service.dto.response.RecyclerDashboardResponse;
 import com.ecobridge.waste_service.dto.response.WasteResponse;
+import com.ecobridge.waste_service.dto.response.WasteStatsResponse;
 import com.ecobridge.waste_service.entity.Waste;
 import com.ecobridge.waste_service.enums.WasteStatus;
 import com.ecobridge.waste_service.exception.ResourceNotFoundException;
@@ -58,6 +60,17 @@ public class WasteServiceImpl implements WasteService {
     }
 
     @Override
+    public List<WasteResponse> getAvailableWaste() {
+
+        return wasteRepository
+                .findByStatus(WasteStatus.AVAILABLE)
+                .stream()
+                .map(wasteMapper::toResponse)
+                .toList();
+
+    }
+
+    @Override
     public List<WasteResponse> getMyWaste() {
 
         return wasteRepository.findByCreatedBy(
@@ -67,6 +80,8 @@ public class WasteServiceImpl implements WasteService {
                 .map(wasteMapper::toResponse)
                 .toList();
     }
+
+
 
     @Override
     public WasteResponse updateWaste(UUID id, UpdateWasteRequest request) {
@@ -107,18 +122,169 @@ public class WasteServiceImpl implements WasteService {
                 .toList();
     }
     @Override
-    public WasteResponse reserveWaste(UUID id) {
+    public WasteResponse reserveWaste(UUID wasteId) {
 
-        Waste waste = wasteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Waste not found"));
+        Waste waste = wasteRepository
+                .findById(wasteId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Waste not found."
+                        ));
 
         if (waste.getStatus() != WasteStatus.AVAILABLE) {
-            throw new RuntimeException("Waste cannot be reserved");
+
+            throw new RuntimeException(
+                    "Waste already reserved."
+            );
+
         }
 
-        Waste updated = wasteRepository.save(waste);
+        waste.setStatus(
+                WasteStatus.RESERVED
+        );
 
-        return wasteMapper.toResponse(updated);
+        waste.setReservedBy(
+                CurrentUserUtil.getCurrentUserId()
+        );
+
+        Waste saved =
+                wasteRepository.save(waste);
+
+        return wasteMapper.toResponse(saved);
+
     }
+    @Override
+    public List<WasteResponse> getMyPickups() {
+
+        UUID recyclerId = CurrentUserUtil.getCurrentUserId();
+
+        return wasteRepository
+                .findByReservedBy(recyclerId)
+                .stream()
+                .map(wasteMapper::toResponse)
+                .toList();
+
+    }
+
+    @Override
+    public WasteResponse completePickup(UUID wasteId) {
+
+        Waste waste = wasteRepository
+                .findById(wasteId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Waste not found"));
+
+        UUID recyclerId =
+                CurrentUserUtil.getCurrentUserId();
+
+        if (!recyclerId.equals(waste.getReservedBy())) {
+
+            throw new RuntimeException(
+                    "You cannot complete someone else's pickup."
+            );
+
+        }
+
+        waste.setStatus(
+                WasteStatus.COMPLETED
+        );
+
+        Waste saved =
+                wasteRepository.save(waste);
+
+        return wasteMapper.toResponse(saved);
+
+    }
+
+    @Override
+    public List<WasteResponse> getPickupHistory() {
+
+        return wasteRepository
+                .findByReservedByAndStatus(
+                        CurrentUserUtil.getCurrentUserId(),
+                        WasteStatus.COMPLETED
+                )
+                .stream()
+                .map(wasteMapper::toResponse)
+                .toList();
+
+    }
+
+    @Override
+    public WasteStatsResponse getWasteStats() {
+
+        long total = wasteRepository.count();
+
+        long completed =
+                wasteRepository.countByStatus(
+                        WasteStatus.COMPLETED
+                );
+
+        double pickupRate =
+                total == 0
+                        ? 0
+                        : (completed * 100.0) / total;
+
+        return WasteStatsResponse.builder()
+
+                .totalWaste(total)
+
+                .availableWaste(
+                        wasteRepository.countByStatus(
+                                WasteStatus.AVAILABLE
+                        )
+                )
+
+                .reservedWaste(
+                        wasteRepository.countByStatus(
+                                WasteStatus.RESERVED
+                        )
+                )
+
+                .completedWaste(completed)
+
+                .recycledKg(
+                        wasteRepository.totalRecycledKg()
+                )
+
+                .pickupRate(pickupRate)
+
+                .build();
+
+    }
+
+    @Override
+    public RecyclerDashboardResponse getRecyclerDashboard() {
+
+        UUID recyclerId =
+                CurrentUserUtil.getCurrentUserId();
+
+        return RecyclerDashboardResponse
+                .builder()
+
+                .availableWaste(
+                        wasteRepository.countByStatus(
+                                WasteStatus.AVAILABLE
+                        )
+                )
+
+                .reservedWaste(
+                        wasteRepository.countByReservedBy(
+                                recyclerId
+                        )
+                )
+
+                .completedWaste(
+                        wasteRepository.countByReservedByAndStatus(
+                                recyclerId,
+                                WasteStatus.COMPLETED
+                        )
+                )
+
+                .build();
+
+    }
+
+
 
 }

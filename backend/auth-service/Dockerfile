@@ -1,12 +1,9 @@
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY . .
+COPY target/auth-service-0.0.1-SNAPSHOT.jar app.jar
 
-RUN chmod +x mvnw
-RUN ./mvnw clean package -DskipTests
+EXPOSE 8081
 
-EXPOSE 8080
-
-CMD ["java","-jar","target/projectonauth-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]

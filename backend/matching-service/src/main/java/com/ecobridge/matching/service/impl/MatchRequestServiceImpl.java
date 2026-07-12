@@ -12,6 +12,7 @@ import com.ecobridge.matching.mapper.MatchRequestMapper;
 import com.ecobridge.matching.repository.MatchRequestRepository;
 import com.ecobridge.matching.security.CurrentUserUtil;
 import com.ecobridge.matching.service.MatchRequestService;
+import com.ecobridge.matching.service.OpenStreetMapService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ import java.util.UUID;
 public class MatchRequestServiceImpl implements MatchRequestService {
     private final WasteClient wasteClient;
     private final RecyclerClient recyclerClient;
-
+    private final OpenStreetMapService openStreetMapService;
     private final MatchRequestRepository matchRequestRepository;
     private final MatchRequestMapper mapper;
 

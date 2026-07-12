@@ -1,6 +1,6 @@
 package com.ecobridge.auth.auth.config;
 
-import com.ecobridge.auth.dtos.ApiError;
+import com.ecobridge.auth.dto.ApiError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;

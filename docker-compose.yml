@@ -1,0 +1,143 @@
+services:
+
+  config-server:
+    image: ecobridge/config-server:1.0
+    container_name: ecobridge-config-server
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8888:8888"
+
+    networks:
+      - ecobridge-network
+      
+  discovery-server:
+    image: ecobridge/discovery-server:1.0
+    container_name: ecobridge-discovery-server
+    restart: unless-stopped
+    depends_on:
+      - config-server
+    ports:
+      - "8761:8761"
+    networks:
+      - ecobridge-network
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  auth-service:
+    image: ecobridge/auth-service:1.0
+    container_name: ecobridge-auth-service
+    restart: unless-stopped
+    depends_on:
+      - config-server
+      - discovery-server
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      JWT_SECRET: "1234567890123456789012345678901234567890123456789012345678901234"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_auth
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: divyansh123
+    networks:
+      - ecobridge-network
+
+  waste-service:
+    image: ecobridge/waste-service:1.0
+    container_name: ecobridge-waste-service
+    restart: unless-stopped
+    depends_on:
+      - config-server
+      - discovery-server
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_waste
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: divyansh123
+    networks:
+      - ecobridge-network
+
+  recycler-service:
+    image: ecobridge/recycler-service:1.0
+    container_name: ecobridge-recycler-service
+    restart: unless-stopped
+    depends_on:
+      - config-server
+      - discovery-server
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_recycler
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: divyansh123
+    networks:
+      - ecobridge-network
+
+  matching-service:
+    image: ecobridge/matching-service:1.0
+    container_name: ecobridge-matching-service
+    restart: unless-stopped
+    depends_on:
+      - config-server
+      - discovery-server
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_matching
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: divyansh123
+    networks:
+      - ecobridge-network
+
+  analytics-service:
+    image: ecobridge/analytics-service:1.0
+    container_name: ecobridge-analytics-service
+    restart: unless-stopped
+    depends_on:
+      - config-server
+      - discovery-server
+    ports:
+      - "8087:8087"
+    networks:
+      - ecobridge-network
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  api-gateway:
+    image: ecobridge/api-gateway:1.0
+    container_name: ecobridge-api-gateway
+    restart: unless-stopped
+    depends_on:
+      - auth-service
+      - waste-service
+      - recycler-service
+      - matching-service
+      - analytics-service
+    ports:
+      - "8080:8080"
+    networks:
+      - ecobridge-network
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  frontend:
+    image: ecobridge/frontend:1.0
+    container_name: ecobridge-frontend
+    restart: unless-stopped
+    depends_on:
+      - api-gateway
+    ports:
+      - "80:80"
+    networks:
+      - ecobridge-network
+
+networks:
+  ecobridge-network:
+    driver: bridge

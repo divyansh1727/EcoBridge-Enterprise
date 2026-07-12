@@ -2,6 +2,9 @@ import { useState } from "react";
 import { register } from "../services/authService";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
 export default function Register({ onRegisterSuccess, goLogin }) {
   const [form, setForm] = useState({
@@ -9,10 +12,11 @@ export default function Register({ onRegisterSuccess, goLogin }) {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "ROLE_GENERATOR",
   });
 
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -79,6 +83,7 @@ export default function Register({ onRegisterSuccess, goLogin }) {
         name: form.name,
         email: form.email,
         password: form.password,
+        role: form.role,
       });
 
       setLoading(false);
@@ -88,6 +93,7 @@ toast.success("🎉 Account created successfully! Please login.");
 if (onRegisterSuccess) {
     onRegisterSuccess();
 }
+navigate("/login");
     } catch (err) {
       setLoading(false);
 
@@ -207,6 +213,97 @@ if (onRegisterSuccess) {
           </p>
         )}
 
+        <div className="mb-6">
+
+    <label className="block mb-3 font-semibold text-gray-700">
+        Account Type
+    </label>
+
+    <div className="grid grid-cols-2 gap-3">
+
+        <button
+            type="button"
+            onClick={() =>
+                setForm({
+                    ...form,
+                    role: "ROLE_GENERATOR",
+                })
+            }
+            className={`rounded-xl border-2 p-4 transition ${
+                form.role === "ROLE_GENERATOR"
+                    ? "border-green-600 bg-green-50"
+                    : "border-gray-300"
+            }`}
+        >
+            ♻️ Generator
+        </button>
+
+        <button
+            type="button"
+            onClick={() =>
+                setForm({
+                    ...form,
+                    role: "ROLE_RECYCLER",
+                })
+            }
+            className={`rounded-xl border-2 p-4 transition ${
+                form.role === "ROLE_RECYCLER"
+                    ? "border-green-600 bg-green-50"
+                    : "border-gray-300"
+            }`}
+        >
+            🚛 Recycler
+        </button>
+
+    </div>
+
+</div>
+<div className="flex items-center gap-4 my-6">
+
+    <div className="flex-1 h-px bg-white/20"></div>
+
+    <span className="text-green-200 text-sm">
+        OR CONTINUE WITH
+    </span>
+
+    <div className="flex-1 h-px bg-white/20"></div>
+
+</div>
+
+<div className="space-y-3">
+
+    {/* Google */}
+
+    <button
+        type="button"
+        onClick={() =>
+            window.location.href =
+                "http://localhost:8080/oauth2/authorization/google"
+        }
+        className="w-full flex items-center justify-center gap-3 rounded-xl bg-white py-3 font-semibold text-gray-800 shadow hover:bg-gray-100 transition"
+    >
+        <FcGoogle size={24} />
+        Continue with Google
+    </button>
+
+    {/* GitHub */}
+
+    <button
+        type="button"
+        onClick={() =>
+            window.location.href =
+                "http://localhost:8080/oauth2/authorization/github"
+        }
+        className="w-full flex items-center justify-center gap-3 rounded-xl bg-[#24292f] py-3 font-semibold text-white shadow hover:bg-[#1b1f23] transition"
+    >
+        <FaGithub size={22} />
+        Continue with GitHub
+    </button>
+
+</div>
+        <p className="text-center mt-3 text-gray-600">
+
+
         <button
           type="submit"
           disabled={loading}
@@ -221,13 +318,12 @@ if (onRegisterSuccess) {
             : "Create Account"}
         </button>
 
-        <p className="text-center mt-6 text-gray-600">
 
           Already have an account?
 
           <button
             type="button"
-            onClick={goLogin}
+            onClick={() => navigate("/login")}
             className="text-green-700 font-semibold ml-2"
           >
             Login

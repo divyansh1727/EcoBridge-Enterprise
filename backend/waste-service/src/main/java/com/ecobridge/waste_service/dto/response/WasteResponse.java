@@ -46,4 +46,7 @@ public class WasteResponse {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private UUID reservedBy;
+
 }

@@ -1,7 +1,7 @@
 package com.ecobridge.auth.exceptions;
 
-import com.ecobridge.auth.dtos.ApiError;
-import com.ecobridge.auth.dtos.ErrorResponse;
+import com.ecobridge.auth.dto.ApiError;
+import com.ecobridge.auth.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -5,7 +5,9 @@ import com.ecobridge.auth.auth.payload.ChangePasswordRequest;
 import com.ecobridge.auth.auth.payload.DeleteAccountRequest;
 import com.ecobridge.auth.auth.payload.UserDto;
 import com.ecobridge.auth.auth.services.UserService;
+import com.ecobridge.auth.dto.response.UserStatsResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,6 +50,7 @@ public class UserController {
 
     //update user
     //api/v1/users/{userId}
+
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto> updateUser(
             @RequestBody UserDto userDto,
@@ -60,10 +63,28 @@ public class UserController {
 
     //get user by id
     //api/v1/users/{userId}
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
+
+        String email = authentication.getName();
+
+        return ResponseEntity.ok(
+                userService.getUserByEmail(email)
+        );
+    }
     @PreAuthorize("hasRole('"+ AppConstants.ADMIN_ROLE +"')")
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<UserStatsResponse> getStats() {
+
+        return ResponseEntity.ok(
+                userService.getUserStats()
+        );
+
     }
 
     //for the imageofprofile

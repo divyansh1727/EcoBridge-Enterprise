@@ -38,8 +38,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         logger.info("Authorization header : {}", header);
 
         if (header != null && header.startsWith("Bearer ")) {
-
-
             //token extract and validate then authentication create and then security context ke ander set karunga.
 
             String token = header.substring(7);
@@ -76,17 +74,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 System.out.println("ROLE = " + role.getName())
                         );
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken
-                                (user.getEmail(), null, user.getAuthorities());
+                                (user, null, user.getAuthorities());
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         //final line : to set the authentication to security context
                         if (SecurityContextHolder.getContext().getAuthentication() == null)
                             SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
-
-
                 });
-
-
             } catch (ExpiredJwtException e) {
                 request.setAttribute("error", "Token Expired");
                 // e.printStackTrace();
@@ -106,7 +100,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().startsWith("/api/v1/auth");
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+
+        String uri = request.getRequestURI();
+
+        return uri.equals("/api/v1/auth/login")
+                || uri.equals("/api/v1/auth/register")
+                || uri.equals("/api/v1/auth/refresh")
+                || uri.startsWith("/oauth2/")
+                || uri.startsWith("/login/oauth2/");
     }
 }

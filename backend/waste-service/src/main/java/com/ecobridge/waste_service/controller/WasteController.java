@@ -2,9 +2,12 @@ package com.ecobridge.waste_service.controller;
 
 import com.ecobridge.waste_service.dto.request.CreateWasteRequest;
 import com.ecobridge.waste_service.dto.request.UpdateWasteRequest;
+import com.ecobridge.waste_service.dto.response.RecyclerDashboardResponse;
 import com.ecobridge.waste_service.dto.response.WasteResponse;
+import com.ecobridge.waste_service.dto.response.WasteStatsResponse;
 import com.ecobridge.waste_service.service.WasteService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +39,23 @@ public class WasteController {
         return wasteService.getWasteById(id);
 
     }
+    @GetMapping("/available")
+    public ResponseEntity<List<WasteResponse>> getAvailableWaste() {
+
+        return ResponseEntity.ok(
+                wasteService.getAvailableWaste()
+        );
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<WasteStatsResponse> getStats() {
+
+        return ResponseEntity.ok(
+                wasteService.getWasteStats()
+        );
+
+    }
+
     @GetMapping("/my")
     public List<WasteResponse> getMyWaste() {
         return wasteService.getMyWaste();
@@ -47,6 +67,45 @@ public class WasteController {
     ) {
         return wasteService.updateWaste(id, request);
     }
+
+    @GetMapping("/my-pickups")
+    public ResponseEntity<List<WasteResponse>> getMyPickups() {
+
+        return ResponseEntity.ok(
+                wasteService.getMyPickups()
+        );
+
+    }
+
+    @GetMapping("/pickup-history")
+    public ResponseEntity<List<WasteResponse>> getPickupHistory() {
+
+        return ResponseEntity.ok(
+                wasteService.getPickupHistory()
+        );
+
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<WasteResponse> completePickup(
+            @PathVariable UUID id
+    ) {
+
+        return ResponseEntity.ok(
+                wasteService.completePickup(id)
+        );
+
+    }
+
+    @GetMapping("/recycler-dashboard")
+    public ResponseEntity<RecyclerDashboardResponse> recyclerDashboard() {
+
+        return ResponseEntity.ok(
+                wasteService.getRecyclerDashboard()
+        );
+
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWaste(@PathVariable UUID id) {
@@ -56,10 +115,16 @@ public class WasteController {
     public List<WasteResponse> getAllWaste() {
         return wasteService.getAllWaste();
     }
+
+
     @PutMapping("/{id}/reserve")
-    public WasteResponse reserveWaste(
+    public ResponseEntity<WasteResponse> reserveWaste(
             @PathVariable UUID id
     ) {
-        return wasteService.reserveWaste(id);
+
+        return ResponseEntity.ok(
+                wasteService.reserveWaste(id)
+        );
+
     }
 }

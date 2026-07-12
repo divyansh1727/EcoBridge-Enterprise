@@ -28,6 +28,8 @@ public class User implements UserDetails {
     @Column(name = "user_name", length = 500)
     private String name;
     private String password;
+    @Column(unique = true)
+    private String phoneNumber;
     private String image;
     private Boolean enable = true;
     private Instant createdAt = Instant.now();
@@ -40,6 +42,7 @@ public class User implements UserDetails {
     private Provider provider = Provider.LOCAL;
     private  String providerId;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

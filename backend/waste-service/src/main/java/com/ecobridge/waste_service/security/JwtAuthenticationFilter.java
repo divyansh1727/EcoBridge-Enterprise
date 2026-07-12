@@ -23,6 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -31,6 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
+        System.out.println("REQUEST = " + request.getRequestURI());
+        System.out.println("HEADER = " + header);
 
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -41,6 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
 
             String token = header.substring(7);
+            System.out.println("TOKEN = " + token);
 
             if (!jwtService.isAccessToken(token)) {
                 filterChain.doFilter(request, response);
@@ -48,6 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             Jws<Claims> claims = jwtService.parse(token);
+            System.out.println("JWT PARSED SUCCESSFULLY");
 
             JwtUser user = JwtUser.builder()
                     .id(jwtService.getUserId(token))
@@ -75,8 +80,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext()
                     .setAuthentication(authentication);
+            System.out.println("AUTH SET");
 
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+
+            System.out.println("JWT ERROR = " + e.getMessage());
+
+            e.printStackTrace();
+
         }
 
         filterChain.doFilter(request, response);

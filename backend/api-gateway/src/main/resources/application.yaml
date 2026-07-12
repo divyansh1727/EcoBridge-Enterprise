@@ -16,11 +16,42 @@ spring:
             uri: lb://AUTH-SERVICE
             predicates:
               - Path=/api/v1/auth/**
+          - id: oauth-route
+            uri: lb://AUTH-SERVICE
+            predicates:
+              - Path=/oauth2/**
+
+          - id: oauth-login-route
+            uri: lb://AUTH-SERVICE
+            predicates:
+              - Path=/login/oauth2/**
 
           - id: user-route
             uri: lb://AUTH-SERVICE
             predicates:
               - Path=/api/v1/users/**
+          - id: waste-route
+            uri: lb://WASTE-SERVICE
+            predicates:
+              - Path=/api/v1/waste/**
+          - id: upload-route
+            uri: lb://WASTE-SERVICE
+            predicates:
+              - Path=/api/v1/upload/**
+
+          - id: recycler-route
+            uri: lb://RECYCLER-SERVICE
+            predicates:
+              - Path=/api/v1/recycler/**
+
+          - id: matching-route
+            uri: lb://MATCHING-SERVICE
+            predicates:
+              - Path=/api/v1/matching/**
+          - id: analytics-route
+            uri: lb://ANALYTICS-SERVICE
+            predicates:
+              - Path=/api/v1/analytics/**
 
 eureka:
   client:

@@ -17,8 +17,10 @@ public class UserDto {
 
     private UUID id;
     private String email;
+    private String role;
     private String name;
     private String password;
+    private String phoneNumber;
     private String image;
     private Boolean enable = true;
     private Instant createdAt = Instant.now();

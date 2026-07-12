@@ -4,5 +4,6 @@ public enum WasteStatus {
     AVAILABLE,
     RESERVED,
     COLLECTED,
-    CANCELLED
+    CANCELLED,
+    COMPLETED
 }

@@ -26,6 +26,9 @@ public class WasteMapper {
                 .pickupEnd(waste.getPickupEnd())
                 .createdAt(waste.getCreatedAt())
                 .updatedAt(waste.getUpdatedAt())
+                .reservedBy(
+                waste.getReservedBy()
+        )
                 .build();
     }
 }

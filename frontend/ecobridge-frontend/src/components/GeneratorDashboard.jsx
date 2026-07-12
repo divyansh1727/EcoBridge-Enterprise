@@ -1,70 +1,201 @@
 import { useEffect, useState } from "react";
+import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
+import PageHeader from "../components/ui/PageHeader";
+import StatCard from "../components/ui/StatCard";
+import AppCard from "../components/ui/AppCard";
+import AppButton from "../components/ui/AppButton";
+export default function GeneratorDashboard() {
 
-const API_BASE = import.meta.env.VITE_API_URL;
+    const [wasteList, setWasteList] = useState([]);
+    const totalWaste = wasteList.length;
 
-export default function GeneratorDashboard({ onBack }) {
-  const [requests, setRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
+const availableWaste =
+    wasteList.filter(
+        w => w.status === "AVAILABLE"
+    ).length;
 
-  useEffect(() => {
-    const fetchRequests = async () => {
-      try {
-        const token = localStorage.getItem("token");
+const reservedWaste =
+    wasteList.filter(
+        w => w.status === "RESERVED"
+    ).length;
 
-        const res = await fetch(
-          `${API_BASE}/api/generator/requests`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+const completedWaste =
+    wasteList.filter(
+        w => w.status === "COMPLETED"
+    ).length;
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+
+        const loadWaste = async () => {
+
+            try {
+
+                const token = localStorage.getItem("accessToken");
+
+                const response = await api.get(
+                    "/api/v1/waste/my",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
+                setWasteList(response.data);
+
+            } catch (err) {
+
+                console.error(err);
+
+            } finally {
+
+                setLoading(false);
+
+            }
+
+        };
+
+        loadWaste();
+
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="p-10">
+                Loading...
+            </div>
         );
+    }
 
-        const data = await res.json();
-        setRequests(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    return (
 
-    fetchRequests();
-  }, []);
+    <div className="min-h-screen p-6 md:p-8 bg-slate-100">
 
-  return (
-    <div className="min-h-screen px-6 py-10 text-white bg-gradient-to-br from-[#062e23] via-[#0b3d2e] to-[#0f5132]">
-      <h2 className="text-3xl font-bold text-center mb-8">
-        My Waste Requests
-      </h2>
+        <PageHeader
+            title={`🌱 Welcome back, ${localStorage.getItem("userName")}`}
+            subtitle="Manage your recyclable waste, monitor requests and track recycling progress."
+        />
 
-      {loading && <p className="text-center">Loading...</p>}
+        <div className="mb-8">
+            <AppButton
+                onClick={() => navigate("/generator/create")}
+            >
+                🌱 Create Waste
+            </AppButton>
+        </div>
 
-      {!loading && requests.length === 0 && (
-        <p className="text-center">No requests found</p>
-      )}
+        {/* Dashboard Cards */}
 
-      <div className="space-y-6 max-w-3xl mx-auto">
-        {requests.map((req) => (
-          <div
-            key={req._id}
-            className="bg-white/90 text-[#0b3d2e] p-6 rounded-xl shadow-lg"
-          >
-            <p><b>Waste Type:</b> {req.wasteType}</p>
-            <p><b>Quantity:</b> {req.quantity} kg</p>
-            <p><b>Status:</b> {req.status}</p>
-          </div>
-        ))}
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
 
-      <div className="text-center mt-8">
-        <button
-          onClick={onBack}
-          className="px-6 py-2 bg-gray-200 text-[#062e23] rounded-xl font-semibold hover:bg-gray-300"
-        >
-          Back
-        </button>
-      </div>
+            <StatCard
+    title="Total Waste"
+    value={totalWaste}
+    icon="♻️"
+    color="text-green-700"
+    bg="bg-green-100"
+/>
+
+<StatCard
+    title="Available"
+    value={availableWaste}
+    icon="🟢"
+    color="text-green-700"
+    bg="bg-green-100"
+/>
+
+<StatCard
+    title="Reserved"
+    value={reservedWaste}
+    icon="🟠"
+    color="text-orange-600"
+    bg="bg-orange-100"
+/>
+
+<StatCard
+    title="Completed"
+    value={completedWaste}
+    icon="🔵"
+    color="text-blue-600"
+    bg="bg-blue-100"
+/>
+
+        </div>
+
+        <h2 className="text-2xl font-bold text-gray-700 mb-5">
+            Recent Waste
+        </h2>
+
+        {wasteList.length === 0 ? (
+
+            <AppCard>
+
+                <div className="text-center py-10">
+
+                    <h2 className="text-2xl font-semibold">
+                        No Waste Published Yet 🌱
+                    </h2>
+
+                    <p className="text-gray-500 mt-3">
+                        Click "Create Waste" to publish your first recyclable waste.
+                    </p>
+
+                </div>
+
+            </AppCard>
+
+        ) : (
+
+            <div className="space-y-6">
+
+                {wasteList.map((waste) => (
+
+                    <AppCard key={waste.id}>
+
+                        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+
+                            <div>
+
+                                <h3 className="text-xl font-bold text-green-700">
+                                    {waste.title}
+                                </h3>
+
+                                <p className="text-gray-600 mt-2">
+                                    {waste.description}
+                                </p>
+
+                                <p className="mt-3 text-gray-700">
+                                    <strong>Type:</strong> {waste.wasteType}
+                                </p>
+
+                                <p className="text-gray-700">
+                                    <strong>Quantity:</strong> {waste.quantity} {waste.quantityUnit}
+                                </p>
+
+                            </div>
+
+                            <div>
+
+                                <span className="px-4 py-2 rounded-full bg-green-100 text-green-700 font-semibold">
+                                    {waste.status}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </AppCard>
+
+                ))}
+
+            </div>
+
+        )}
+
     </div>
-  );
+
+);
 }

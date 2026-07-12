@@ -66,6 +66,9 @@ public class Waste {
 
     private LocalDateTime updatedAt;
 
+    @Column(name = "reserved_by")
+    private UUID reservedBy;
+
     @PrePersist
     public void onCreate() {
         createdAt = LocalDateTime.now();

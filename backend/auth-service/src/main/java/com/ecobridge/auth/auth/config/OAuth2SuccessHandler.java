@@ -4,6 +4,7 @@ import com.ecobridge.auth.auth.entities.Provider;
 import com.ecobridge.auth.auth.entities.RefreshToken;
 import com.ecobridge.auth.auth.entities.User;
 import com.ecobridge.auth.auth.repositories.RefreshTokenRepository;
+import com.ecobridge.auth.auth.repositories.RoleRepository;
 import com.ecobridge.auth.auth.repositories.UserRepository;
 import com.ecobridge.auth.auth.services.impl.CookieService;
 import com.ecobridge.auth.auth.services.impl.JwtService;
@@ -19,9 +20,10 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
+import com.ecobridge.auth.auth.entities.Role;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.UUID;
 
 
@@ -32,6 +34,7 @@ import java.util.UUID;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final RoleRepository roleRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final CookieService cookieService;
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
@@ -60,6 +63,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                         .image(picture)
                         .enable(true)
                         .provider(Provider.GOOGLE)
+                        .roles(new HashSet<>())
                         .build();
 //                userRepository.findByEmail(email).ifPresentOrElse(user1 -> {
 //                    logger.info("User is there in db");
@@ -69,7 +73,19 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 //
 //
 //                });
-               user= userRepository.findByEmail(email).orElseGet(()-> userRepository.save(newUser));
+                user = userRepository.findByEmail(email)
+                        .orElseGet(() -> {
+
+                            Role role = roleRepository
+                                    .findByName("ROLE_GENERATOR")
+                                    .orElseThrow(() ->
+                                            new RuntimeException("ROLE_GENERATOR not found"));
+
+                            newUser.getRoles().add(role);
+
+                            return userRepository.save(newUser);
+
+                        });
             }
             case "github" ->{
                 String name = oAuth2User.getAttributes().getOrDefault("login", "").toString();
@@ -87,8 +103,21 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                         .image(image)
                         .enable(true)
                         .provider(Provider.GITHUB)
+                        .roles(new HashSet<>())
                         .build();
-                user = userRepository.findByEmail(email).orElseGet(() -> userRepository.save(newUser));
+                user = userRepository.findByEmail(email)
+                        .orElseGet(() -> {
+
+                            Role role = roleRepository
+                                    .findByName("ROLE_GENERATOR")
+                                    .orElseThrow(() ->
+                                            new RuntimeException("ROLE_GENERATOR not found"));
+
+                            newUser.getRoles().add(role);
+
+                            return userRepository.save(newUser);
+
+                        });
 
 
 
@@ -116,7 +145,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             String refreshToken = jwtService.generateRefreshToken(user, refreshTokenOb.getJti());
             cookieService.attachRefreshCookie(response, refreshToken, (int) jwtService.getRefreshTtlSeconds());
 //        response.getWriter().write("Login successful");
-        response.sendRedirect(frontEndSuccessUrl);
+        response.sendRedirect(
+                frontEndSuccessUrl +
+                        "?token=" + accessToken
+        );
 
     }
 }

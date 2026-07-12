@@ -5,6 +5,7 @@ import com.ecobridge.auth.auth.payload.DeleteAccountRequest;
 import com.ecobridge.auth.auth.payload.UserDto;
 import java.io.IOException;
 
+import com.ecobridge.auth.dto.response.UserStatsResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -35,6 +36,8 @@ public interface UserService {
 
     //to delete the user
     void deleteAccount(String userId, DeleteAccountRequest request);
+
+    UserStatsResponse getUserStats();
 
 
 

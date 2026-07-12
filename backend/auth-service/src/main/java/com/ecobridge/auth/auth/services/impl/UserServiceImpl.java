@@ -8,12 +8,14 @@ import com.ecobridge.auth.auth.entities.Provider;
 import com.ecobridge.auth.auth.entities.Role;
 import com.ecobridge.auth.auth.entities.User;
 import com.ecobridge.auth.auth.repositories.RefreshTokenRepository;
+import com.ecobridge.auth.dto.response.UserStatsResponse;
 import com.ecobridge.auth.exceptions.ResourceNotFoundException;
 import com.ecobridge.auth.auth.helpers.UserHelper;
 import com.ecobridge.auth.auth.repositories.RoleRepository;
 import com.ecobridge.auth.auth.repositories.UserRepository;
 import com.ecobridge.auth.auth.services.UserService;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -69,12 +71,15 @@ public class UserServiceImpl implements UserService {
         }
 
         // Assign default role
+        String roleName =
+                userDto.getRole() == null || userDto.getRole().isBlank()
+                        ? "ROLE_GENERATOR"
+                        : userDto.getRole();
+
         Role role = roleRepository
-                .findByName("ROLE_" + AppConstants.GUEST_ROLE)
+                .findByName(roleName)
                 .orElseThrow(() ->
-                        new RuntimeException(
-                                "Default role ROLE_" + AppConstants.GUEST_ROLE + " not found"
-                        ));
+                        new RuntimeException(roleName + " not found"));
 
         user.getRoles().add(role);
 
@@ -103,12 +108,42 @@ public class UserServiceImpl implements UserService {
         if (userDto.getName() != null) existingUser.setName(userDto.getName());
         if (userDto.getImage() != null) existingUser.setImage(userDto.getImage());
         if (userDto.getProvider() != null) existingUser.setProvider(userDto.getProvider());
+        if (userDto.getPhoneNumber() != null &&
+                !userDto.getPhoneNumber().matches("\\d{10}")) {
+
+            throw new BadRequestException(
+                    "Phone number must contain exactly 10 digits"
+            );
+
+        }
+        if (userDto.getPhoneNumber() != null) existingUser.setPhoneNumber(userDto.getPhoneNumber());
         //TODO: change password updation logic...
         if (userDto.getPassword() != null) existingUser.setPassword(userDto.getPassword());
         existingUser.setEnable(userDto.getEnable());
         existingUser.setUpdatedAt(Instant.now());
         User updatedUser = userRepository.save(existingUser);
         return modelMapper.map(updatedUser, UserDto.class);
+    }
+
+    @Override
+    public UserStatsResponse getUserStats() {
+
+        return UserStatsResponse.builder()
+
+                .totalUsers(
+                        userRepository.count()
+                )
+
+                .totalGenerators(
+                        userRepository.countByRoles_Name("ROLE_GENERATOR")
+                )
+
+                .totalRecyclers(
+                        userRepository.countByRoles_Name("ROLE_RECYCLER")
+                )
+
+                .build();
+
     }
 
     @Override
