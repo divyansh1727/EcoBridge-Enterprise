@@ -7,15 +7,20 @@ spring:
     username: postgres
     password: divyansh123
 
-
-security:
-  jwt:
-    secret: ${JWT_SECRET}
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+security:
+  jwt:
+    # Adding a fallback default key so your build compiles successfully even when JVM/OS env vars are missing
+    secret: ${JWT_SECRET:1234567890123456789012345678901234567890123456789012345678901234}
 
 eureka:
   client:

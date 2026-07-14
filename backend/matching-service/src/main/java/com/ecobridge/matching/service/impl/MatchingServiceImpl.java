@@ -6,6 +6,7 @@ import com.ecobridge.matching.service.MatchingService;
 import com.ecobridge.matching.service.OpenStreetMapService;
 import com.ecobridge.matching.util.DistanceUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,8 +20,11 @@ public class MatchingServiceImpl implements MatchingService {
 
     private final WasteClient wasteClient;
     private final RecyclerClient recyclerClient;
-
-        @Override
+    @Override
+    @Cacheable(
+            value = "nearbyWaste",
+            key = "#latitude + '_' + #longitude"
+    )
         public List<NearbyWasteResponse> getNearbyWaste(
                 Double latitude,
                 Double longitude
@@ -81,6 +85,10 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     @Override
+    @Cacheable(
+            value = "matches",
+            key = "#wasteId"
+    )
     public List<MatchResultResponse> findMatches(UUID wasteId) {
 
         WasteResponse waste = wasteClient.getWaste(wasteId);
@@ -126,7 +134,12 @@ public class MatchingServiceImpl implements MatchingService {
 
                 .toList();
     }
+
     @Override
+    @Cacheable(
+            value = "nearbyRecyclers",
+            key = "#latitude + '_' + #longitude"
+    )
     public NearbyPartnersResponse getNearbyRecyclers(
             Double latitude,
             Double longitude

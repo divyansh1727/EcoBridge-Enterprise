@@ -1,5 +1,5 @@
 package com.ecobridge.matching.dto;
-
+import java.io.Serializable;
 import lombok.*;
 import com.ecobridge.matching.enums.WasteType;
 import com.ecobridge.matching.enums.QuantityUnit;
@@ -10,7 +10,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NearbyWasteResponse {
+public class NearbyWasteResponse implements Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     private UUID id;
 

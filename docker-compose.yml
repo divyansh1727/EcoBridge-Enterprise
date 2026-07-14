@@ -105,6 +105,7 @@ services:
     depends_on:
       - config-server
       - discovery-server
+      - redis
     ports:
       - "8086:8086"
     environment:
@@ -113,6 +114,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_matching
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: divyansh123
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
     networks:
       - ecobridge-network
 
@@ -123,12 +126,27 @@ services:
     depends_on:
       - config-server
       - discovery-server
+      - redis
     ports:
       - "8087:8087"
-    networks:
-      - ecobridge-network
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    networks:
+      - ecobridge-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: ecobridge-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - ecobridge-network
 
   api-gateway:
     image: ecobridge/api-gateway:1.0
@@ -142,10 +160,10 @@ services:
       - analytics-service
     ports:
       - "8080:8080"
-    networks:
-      - ecobridge-network
     environment:
       SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - ecobridge-network
 
   frontend:
     image: ecobridge/frontend:1.0
@@ -157,6 +175,8 @@ services:
       - "80:80"
     networks:
       - ecobridge-network
+volumes:
+  redis-data:
 
 networks:
   ecobridge-network:

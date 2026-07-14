@@ -1,9 +1,9 @@
 package com.ecobridge.matching.service;
 
 import com.ecobridge.matching.dto.*;
-
 import java.util.List;
 import java.util.UUID;
+
 
 public interface MatchingService {
 
