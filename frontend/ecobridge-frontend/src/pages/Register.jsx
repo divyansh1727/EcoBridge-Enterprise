@@ -87,16 +87,14 @@ export default function Register({ onRegisterSuccess, goLogin }) {
       });
 
       setLoading(false);
+      toast.success("🎉 Account created successfully! Please login.");
 
-toast.success("🎉 Account created successfully! Please login.");
-
-if (onRegisterSuccess) {
-    onRegisterSuccess();
-}
-navigate("/login");
+      if (onRegisterSuccess) {
+        onRegisterSuccess();
+      }
+      navigate("/login");
     } catch (err) {
       setLoading(false);
-
       toast.error(
         err.response?.data?.message ||
           "Registration failed"
@@ -104,235 +102,214 @@ navigate("/login");
     }
   };
 
+  const inputStyle = `
+  w-full
+  rounded-xl
+  bg-white/10
+  border
+  border-white/10
+  p-3
+  text-white
+  placeholder:text-gray-400
+  outline-none
+  focus:border-[#A4B465]
+  focus:ring-2
+  focus:ring-[#A4B465]/20
+  transition
+  `;
+
   return (
-    <div className="min-h-screen flex justify-center items-center bg-green-950 px-4">
+    <div className="relative min-h-screen overflow-hidden bg-[#101411] flex items-center justify-center px-6 py-10">
+      
+      {/* Background Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -left-40 top-0 h-[450px] w-[450px] rounded-full bg-[#A4B465]/10 blur-[160px]" />
+        <div className="absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-orange-500/10 blur-[170px]" />
+      </div>
 
-      <form
-        onSubmit={handleRegister}
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8"
-      >
-
-        <h2 className="text-3xl font-bold text-center text-green-700">
-          Create Account
-        </h2>
-
-        <p className="text-center text-gray-500 mt-2 mb-6">
-          Join EcoBridge 🌱
-        </p>
-
-        <input
-          name="name"
-          placeholder="Full Name"
-          value={form.name}
-          onChange={handleChange}
-          className="w-full border rounded-lg p-3 mb-4"
-        />
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full border rounded-lg p-3 mb-4"
-        />
-
-        <div className="relative mb-4">
-
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full border rounded-lg p-3 pr-12"
-          />
-
-          <button
-            type="button"
-            onClick={() =>
-              setShowPassword(!showPassword)
-            }
-            className="absolute right-3 top-4"
-          >
-            {showPassword ? <FiEyeOff /> : <FiEye />}
-          </button>
-
-        </div>
-
-        <p
-          className={`text-sm mb-4 ${
-            passwordStrength() === "Strong"
-              ? "text-green-600"
-              : passwordStrength() === "Medium"
-              ? "text-yellow-600"
-              : "text-red-600"
-          }`}
+      <div className="relative z-10 w-full max-w-md">
+        <form
+          onSubmit={handleRegister}
+          className="w-full rounded-[32px] border border-white/10 bg-white/5 backdrop-blur-2xl p-8 shadow-2xl"
         >
-          Password Strength: {passwordStrength()}
-        </p>
+          <h2 className="text-3xl font-bold text-center text-white">
+            Create your <span className="text-[#A4B465]">EcoBridge</span> Account
+          </h2>
 
-        <div className="relative mb-2">
-
-          <input
-            type={showConfirmPassword ? "text" : "password"}
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            className="w-full border rounded-lg p-3 pr-12"
-          />
-
-          <button
-            type="button"
-            onClick={() =>
-              setShowConfirmPassword(!showConfirmPassword)
-            }
-            className="absolute right-3 top-4"
-          >
-            {showConfirmPassword ? (
-              <FiEyeOff />
-            ) : (
-              <FiEye />
-            )}
-          </button>
-
-        </div>
-
-        {form.confirmPassword.length > 0 && (
-          <p
-            className={`text-sm mb-4 ${
-              form.password === form.confirmPassword
-                ? "text-green-600"
-                : "text-red-600"
-            }`}
-          >
-            {form.password === form.confirmPassword
-              ? "✓ Passwords match"
-              : "✗ Passwords do not match"}
+          <p className="text-center text-gray-400 mt-2 mb-6 text-sm">
+            Start your sustainable recycling journey today.
           </p>
-        )}
 
-        <div className="mb-6">
+          <div className="mb-4">
+            <input
+              name="name"
+              placeholder="Full Name"
+              value={form.name}
+              onChange={handleChange}
+              className={inputStyle}
+            />
+          </div>
 
-    <label className="block mb-3 font-semibold text-gray-700">
-        Account Type
-    </label>
+          <div className="mb-4">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              className={inputStyle}
+            />
+          </div>
 
-    <div className="grid grid-cols-2 gap-3">
+          {/* Password Input Container */}
+          <div className="relative mb-2">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              className={inputStyle}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#A4B465] hover:text-white transition"
+            >
+              {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+            </button>
+          </div>
 
-        <button
-            type="button"
-            onClick={() =>
-                setForm({
-                    ...form,
-                    role: "ROLE_GENERATOR",
-                })
-            }
-            className={`rounded-xl border-2 p-4 transition ${
-                form.role === "ROLE_GENERATOR"
-                    ? "border-green-600 bg-green-50"
-                    : "border-gray-300"
-            }`}
-        >
-            ♻️ Generator
-        </button>
+          {/* Password Strength Indicator */}
+          <div className="mb-4">
+            <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${
+              passwordStrength() === "Strong"
+                ? "bg-green-500/20 text-green-300"
+                : passwordStrength() === "Medium"
+                ? "bg-yellow-500/20 text-yellow-300"
+                : "bg-red-500/20 text-red-300"
+            }`}>
+              {passwordStrength()} Password
+            </span>
+          </div>
 
-        <button
-            type="button"
-            onClick={() =>
-                setForm({
-                    ...form,
-                    role: "ROLE_RECYCLER",
-                })
-            }
-            className={`rounded-xl border-2 p-4 transition ${
-                form.role === "ROLE_RECYCLER"
-                    ? "border-green-600 bg-green-50"
-                    : "border-gray-300"
-            }`}
-        >
-            🚛 Recycler
-        </button>
+          {/* Confirm Password Input Container */}
+          <div className="relative mb-2">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              className={inputStyle}
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#A4B465] hover:text-white transition"
+            >
+              {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+            </button>
+          </div>
 
-    </div>
+          {form.confirmPassword.length > 0 && (
+            <p className={`text-sm mb-4 font-medium ${
+              form.password === form.confirmPassword ? "text-green-400" : "text-red-400"
+            }`}>
+              {form.password === form.confirmPassword ? "✓ Passwords match" : "✗ Passwords do not match"}
+            </p>
+          )}
 
-</div>
-<div className="flex items-center gap-4 my-6">
+          {/* Account Role Toggles */}
+          <div className="mb-6">
+            <label className="block mb-3 font-semibold text-white text-sm">
+              Account Type
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, role: "ROLE_GENERATOR" })}
+                className={`rounded-xl border p-4 font-medium transition flex flex-col items-center gap-1 ${
+                  form.role === "ROLE_GENERATOR"
+                    ? "border-[#A4B465] bg-[#A4B465]/15 text-[#A4B465]"
+                    : "border-white/10 bg-white/5 text-gray-300 hover:bg-white/10"
+                }`}
+              >
+                <span className="text-xl">♻️</span>
+                Generator
+              </button>
 
-    <div className="flex-1 h-px bg-white/20"></div>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, role: "ROLE_RECYCLER" })}
+                className={`rounded-xl border p-4 font-medium transition flex flex-col items-center gap-1 ${
+                  form.role === "ROLE_RECYCLER"
+                    ? "border-orange-400 bg-orange-500/10 text-orange-400"
+                    : "border-white/10 bg-white/5 text-gray-300 hover:bg-white/10"
+                }`}
+              >
+                <span className="text-xl">🚛</span>
+                Recycler
+              </button>
+            </div>
+          </div>
 
-    <span className="text-green-200 text-sm">
-        OR CONTINUE WITH
-    </span>
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-6">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-gray-400 text-xs font-semibold tracking-wider">
+              OR CONTINUE WITH
+            </span>
+            <div className="flex-1 h-px bg-white/10" />
+          </div>
 
-    <div className="flex-1 h-px bg-white/20"></div>
+          {/* OAuth Buttons */}
+          <div className="space-y-3 mb-6">
+            <button
+              type="button"
+              onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}
+              className="w-full flex items-center justify-center gap-3 rounded-xl bg-white/95 py-3 font-semibold text-gray-800 shadow hover:bg-gray-100 transition duration-200"
+            >
+              <FcGoogle size={24} />
+              Continue with Google
+            </button>
 
-</div>
+            <button
+              type="button"
+              onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/github"}
+              className="w-full flex items-center justify-center gap-3 rounded-xl bg-[#1B211C] border border-white/10 py-3 font-semibold text-white shadow hover:bg-[#242c25] transition duration-200"
+            >
+              <FaGithub size={22} />
+              Continue with GitHub
+            </button>
+          </div>
 
-<div className="space-y-3">
-
-    {/* Google */}
-
-    <button
-        type="button"
-        onClick={() =>
-            window.location.href =
-                "http://localhost:8080/oauth2/authorization/google"
-        }
-        className="w-full flex items-center justify-center gap-3 rounded-xl bg-white py-3 font-semibold text-gray-800 shadow hover:bg-gray-100 transition"
-    >
-        <FcGoogle size={24} />
-        Continue with Google
-    </button>
-
-    {/* GitHub */}
-
-    <button
-        type="button"
-        onClick={() =>
-            window.location.href =
-                "http://localhost:8080/oauth2/authorization/github"
-        }
-        className="w-full flex items-center justify-center gap-3 rounded-xl bg-[#24292f] py-3 font-semibold text-white shadow hover:bg-[#1b1f23] transition"
-    >
-        <FaGithub size={22} />
-        Continue with GitHub
-    </button>
-
-</div>
-        <p className="text-center mt-3 text-gray-600">
-
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full py-3 rounded-lg text-white font-semibold transition ${
-            loading
-              ? "bg-gray-500 cursor-not-allowed"
-              : "bg-green-600 hover:bg-green-700"
-          }`}
-        >
-          {loading
-            ? "Creating Account..."
-            : "Create Account"}
-        </button>
-
-
-          Already have an account?
-
+          {/* Submit Button */}
           <button
-            type="button"
-            onClick={() => navigate("/login")}
-            className="text-green-700 font-semibold ml-2"
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-xl text-white font-semibold mb-4 transition duration-300 ${
+              loading
+                ? "bg-gray-600 cursor-not-allowed"
+                : "bg-gradient-to-r from-[#A4B465] to-[#93a254] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#A4B465]/20"
+            }`}
           >
-            Login
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
 
-        </p>
-
-      </form>
-
+          {/* Redirect Option */}
+          <p className="text-center text-sm text-gray-400">
+            Already have an account?
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="text-[#A4B465] font-semibold ml-2 hover:underline"
+            >
+              Login
+            </button>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

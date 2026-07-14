@@ -1,7 +1,7 @@
 export default function AppInput({
 
     label,
-
+    className = "",
     ...props
 
 }) {
@@ -10,28 +10,40 @@ export default function AppInput({
 
         <div>
 
-            <label className="block mb-2 font-semibold text-gray-700">
+            {label && (
 
-                {label}
+                <label className="mb-3 block text-sm font-semibold tracking-wide text-gray-300">
 
-            </label>
+                    {label}
+
+                </label>
+
+            )}
 
             <input
 
                 {...props}
 
-                className="
+                className={`
                     w-full
-                    rounded-xl
+                    rounded-2xl
                     border
-                    border-gray-300
-                    bg-gray-50
+                    border-white/10
+                    bg-white/5
                     px-4
-                    py-3
-                    focus:ring-2
-                    focus:ring-green-500
+                    py-3.5
+                    text-white
+                    placeholder:text-gray-500
                     outline-none
-                "
+                    transition-all
+                    duration-300
+                    focus:border-[#A4B465]
+                    focus:ring-2
+                    focus:ring-[#A4B465]/20
+                    disabled:cursor-not-allowed
+                    disabled:opacity-60
+                    ${className}
+                `}
 
             />
 

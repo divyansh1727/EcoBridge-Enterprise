@@ -6,29 +6,53 @@ export default function OAuthFailure() {
 
     return (
 
-        <div className="min-h-screen flex justify-center items-center bg-green-950 text-white">
+    <div className="flex min-h-screen items-center justify-center bg-[#101411] px-6">
 
-            <div className="bg-white text-black p-8 rounded-xl text-center">
+        <div className="w-full max-w-md rounded-3xl border border-red-500/20 bg-white/5 p-10 text-center backdrop-blur-xl">
 
-                <h2 className="text-2xl font-bold text-red-600">
-                    Authentication Failed
-                </h2>
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-red-500/10 text-5xl">
 
-                <p className="mt-4">
-                    Google/GitHub login failed.
-                </p>
-
-                <button
-                    onClick={() => navigate("/login")}
-                    className="mt-6 bg-green-600 text-white px-6 py-2 rounded-lg"
-                >
-                    Back to Login
-                </button>
+                ❌
 
             </div>
 
+            <h2 className="mt-8 text-3xl font-bold text-white">
+
+                Authentication Failed
+
+            </h2>
+
+            <p className="mt-4 leading-7 text-gray-400">
+
+                We couldn't sign you in using Google or GitHub.
+
+                Please try again or use another sign-in method.
+
+            </p>
+
+            <button
+                onClick={() => navigate("/login")}
+                className="
+                    mt-10
+                    w-full
+                    rounded-2xl
+                    bg-[#A4B465]
+                    py-4
+                    font-semibold
+                    text-[#101411]
+                    transition
+                    hover:brightness-110
+                "
+            >
+
+                Back to Login
+
+            </button>
+
         </div>
 
-    );
+    </div>
+
+);
 
 }

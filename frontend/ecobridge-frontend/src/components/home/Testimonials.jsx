@@ -1,89 +1,175 @@
 import { motion } from "framer-motion";
-import { FaQuoteLeft, FaLeaf } from "react-icons/fa";
+import {
+  FaQuoteLeft,
+  FaRecycle,
+  FaTruck,
+  FaBuilding,
+  FaStar,
+} from "react-icons/fa";
 
 const testimonials = [
   {
-    name: "Rahul Sharma",
-    role: "Waste Generator",
+    icon: <FaRecycle />,
+    title: "Waste Generator",
+    company: "Residential & Commercial",
     review:
-      "EcoBridge helped me find nearby recyclers within minutes. The process was smooth and incredibly simple.",
+      "Creating waste listings takes only a few seconds. EcoBridge helped us connect with nearby recyclers without making countless phone calls.",
+    accent: "olive",
   },
   {
-    name: "Priya Patel",
-    role: "Recycler",
+    icon: <FaTruck />,
+    title: "Recycler Partner",
+    company: "Verified Recycler",
     review:
-      "The smart matching feature saves me hours every week. I can instantly find nearby waste listings.",
+      "The intelligent location matching helps us discover nearby waste instantly. Pickup management is now much more organized.",
+    accent: "orange",
   },
   {
-    name: "GreenCycle Pvt. Ltd.",
-    role: "Recycling Organization",
+    icon: <FaBuilding />,
+    title: "Recycling Organization",
+    company: "Sustainability Partner",
     review:
-      "A well-designed platform that bridges the gap between waste producers and recycling companies.",
+      "EcoBridge provides a structured workflow that improves coordination between waste generators and recycling partners.",
+    accent: "olive",
   },
 ];
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="py-24 bg-gray-900 text-white">
+    <section
+      id="testimonials"
+      className="relative overflow-hidden bg-[#101411] py-28"
+    >
+      {/* Background */}
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="absolute inset-0 overflow-hidden">
 
-        <div className="text-center mb-16">
+        <div className="absolute left-0 top-0 h-[420px] w-[420px] rounded-full bg-[#7A9B33]/10 blur-[150px]" />
 
-          <h2 className="text-4xl font-bold">
-            Loved by our Community
+        <div className="absolute right-0 bottom-0 h-[420px] w-[420px] rounded-full bg-orange-500/10 blur-[170px]" />
+
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: .7 }}
+          className="text-center"
+        >
+
+          <span className="inline-block rounded-full border border-[#7A9B33]/30 bg-[#7A9B33]/10 px-5 py-2 text-sm font-medium text-[#C7D59F]">
+
+            COMMUNITY FEEDBACK
+
+          </span>
+
+          <h2 className="mt-8 text-5xl font-black text-white">
+
+            Trusted Across the
+
+            <span className="text-[#A4B465]"> Recycling </span>
+
+            Ecosystem
+
           </h2>
 
-          <p className="text-gray-400 mt-4">
-            Hear what our early users have to say.
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-gray-400">
+
+            EcoBridge is designed to simplify collaboration between
+            waste generators, recyclers and sustainability partners.
+
           </p>
 
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="mt-20 grid gap-8 lg:grid-cols-3">
 
-          {testimonials.map((item, index) => (
+          {testimonials.map((item, index) => {
 
-            <motion.div
-              key={index}
-              whileHover={{
-                y: -10,
-                scale: 1.03,
-              }}
-              className="bg-gray-800 rounded-3xl p-8 border border-gray-700 shadow-xl"
-            >
+            const iconColor =
+              item.accent === "orange"
+                ? "text-orange-400"
+                : "text-[#A4B465]";
 
-              <FaQuoteLeft className="text-green-400 text-3xl mb-6" />
+            const border =
+              item.accent === "orange"
+                ? "hover:border-orange-400/40 hover:shadow-[0_0_45px_rgba(249,115,22,.18)]"
+                : "hover:border-[#7A9B33]/40 hover:shadow-[0_0_45px_rgba(122,155,51,.18)]";
 
-              <p className="text-gray-300 leading-7">
-                {item.review}
-              </p>
+            return (
 
-              <div className="flex items-center mt-8">
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  delay: index * .1,
+                  duration: .6,
+                }}
+                whileHover={{
+                  y: -10,
+                  scale: 1.02,
+                }}
+                className={`group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 transition-all duration-300 ${border}`}
+              >
 
-                <div className="w-14 h-14 rounded-full bg-green-600 flex items-center justify-center">
+                <div className="flex items-center justify-between">
 
-                  <FaLeaf />
+                  <FaQuoteLeft className={`text-4xl ${iconColor}`} />
+
+                  <div className="flex gap-1 text-orange-400">
+
+                    {[...Array(5)].map((_, i) => (
+
+                      <FaStar key={i} />
+
+                    ))}
+
+                  </div>
 
                 </div>
 
-                <div className="ml-4">
+                <p className="mt-8 leading-8 text-gray-300">
 
-                  <h4 className="font-bold">
-                    {item.name}
-                  </h4>
+                  "{item.review}"
 
-                  <p className="text-sm text-gray-400">
-                    {item.role}
-                  </p>
+                </p>
+
+                <div className="mt-10 flex items-center gap-5">
+
+                  <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5 text-3xl ${iconColor}`}>
+
+                    {item.icon}
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="text-xl font-bold text-white">
+
+                      {item.title}
+
+                    </h3>
+
+                    <p className="text-gray-400">
+
+                      {item.company}
+
+                    </p>
+
+                  </div>
 
                 </div>
 
-              </div>
+              </motion.div>
 
-            </motion.div>
+            );
 
-          ))}
+          })}
 
         </div>
 

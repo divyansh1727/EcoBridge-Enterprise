@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getCurrentUser } from "../services/oauthService";
 import toast from "react-hot-toast";
+import LoginLoader from "../components/common/LoginLoader";
 
 export default function OAuthSuccess() {
 
@@ -40,6 +41,9 @@ export default function OAuthSuccess() {
                     email: user.email,
                     role: user.roles[0].name
                 });
+                await new Promise((resolve) =>
+    setTimeout(resolve, 1200)
+);
 
                 toast.success("Login Successful!");
 
@@ -70,20 +74,7 @@ export default function OAuthSuccess() {
 
     }, []);
 
-    return (
-        <div className="min-h-screen flex justify-center items-center bg-green-950 text-white">
-
-            <div className="text-center">
-
-                <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-
-                <h2 className="mt-6 text-2xl font-bold">
-                    Signing you in...
-                </h2>
-
-            </div>
-
-        </div>
-    );
+        return <LoginLoader />;
+    
 
 }

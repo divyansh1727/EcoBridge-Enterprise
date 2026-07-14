@@ -10,29 +10,29 @@ export default function GeneratorLayout() {
 
     return (
 
-        <div className="flex items-stretch min-h-screen bg-slate-100">
+    <div className="flex min-h-screen bg-[#101411]">
 
-            <GeneratorSidebar
-                sidebarOpen={sidebarOpen}
+        <GeneratorSidebar
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+        />
+
+        <div className="flex-1 flex flex-col">
+
+            <GeneratorNavbar
                 setSidebarOpen={setSidebarOpen}
             />
 
-            <div className="flex-1">
+            <main className="flex-1 overflow-y-auto">
 
-                <GeneratorNavbar
-                    setSidebarOpen={setSidebarOpen}
-                />
+                <Outlet />
 
-                <main className="p-4 md:p-8">
-
-                    <Outlet />
-
-                </main>
-
-            </div>
+            </main>
 
         </div>
 
-    );
+    </div>
+
+);
 
 }

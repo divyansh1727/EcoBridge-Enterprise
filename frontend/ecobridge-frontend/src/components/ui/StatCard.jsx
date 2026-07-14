@@ -1,54 +1,64 @@
 import AppCard from "./AppCard";
+import { motion } from "framer-motion";
 
 export default function StatCard({
 
     title,
-
     value,
-
     icon,
-
-    color = "text-green-600",
-
-    bg = "bg-green-50"
+    color = "text-[#A4B465]",
+    bg = "bg-[#A4B465]/10"
 
 }) {
 
     return (
 
-        <AppCard>
+        <motion.div
 
-            <div className="flex items-center justify-between">
+            whileHover={{
+                y: -8,
+                scale: 1.02,
+            }}
 
-                <div>
+            transition={{
+                duration: 0.25,
+            }}
 
-                    <p className="text-sm text-gray-500 font-medium">
+        >
 
-                        {title}
+            <AppCard>
 
-                    </p>
+                <div className="flex items-center justify-between">
 
-                    <h2
-                        className={`text-3xl md:text-4xl font-bold mt-3 ${color}`}
+                    <div>
+
+                        <p className="text-sm font-medium uppercase tracking-wider text-gray-400">
+
+                            {title}
+
+                        </p>
+
+                        <h2 className="mt-4 text-4xl font-black text-white">
+
+                            {value}
+
+                        </h2>
+
+                    </div>
+
+                    <div
+                        className={`flex h-16 w-16 items-center justify-center rounded-2xl text-3xl ${bg} ${color}`}
                     >
 
-                        {value}
+                        {icon}
 
-                    </h2>
-
-                </div>
-
-                <div
-                    className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl ${bg}`}
-                >
-
-                    {icon}
+                    </div>
 
                 </div>
 
-            </div>
+            </AppCard>
 
-        </AppCard>
+        </motion.div>
 
     );
 

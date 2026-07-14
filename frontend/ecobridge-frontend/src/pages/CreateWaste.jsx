@@ -200,14 +200,50 @@ setTimeout(() => {
         }
 
     };
-    const inputStyle =
-    "w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition";
-
+    const inputStyle = `
+w-full
+rounded-2xl
+border
+border-white/10
+bg-white/5
+px-5
+py-3.5
+text-white
+placeholder:text-gray-500
+outline-none
+transition
+focus:border-[#A4B465]
+focus:ring-2
+focus:ring-[#A4B465]/20
+`;
     return (
 
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-100 py-10 px-6">
+        <div className="min-h-screen bg-[#101411] px-6 py-10">
+            <div className="max-w-5xl mx-auto mb-10">
 
-            <div className="max-w-4xl mx-auto mb-8">
+    <span className="rounded-full border border-[#A4B465]/20 bg-[#A4B465]/10 px-5 py-2 text-xs font-semibold tracking-[0.25em] text-[#A4B465]">
+
+        {editMode ? "EDIT WASTE" : "CREATE WASTE"}
+
+    </span>
+
+    <h1 className="mt-6 text-5xl font-black text-white">
+
+        {editMode ? "Edit Waste Listing" : "Publish New Waste"}
+
+    </h1>
+
+    <p className="mt-4 max-w-2xl text-lg text-gray-400">
+
+        {editMode
+            ? "Update your waste listing and keep nearby recyclers informed."
+            : "Share recyclable waste with nearby recycling partners in just a few steps."}
+
+    </p>
+
+</div>
+
+            
 
     <h1 className="text-5xl font-bold text-green-700">
         {editMode ? "✏️ Edit Waste" : "🌱 Create Waste"}
@@ -219,16 +255,16 @@ setTimeout(() => {
             : "Publish recyclable waste so nearby recyclers can discover and collect it."}
     </p>
 
-</div>
+
 
             <form
     onSubmit={handleSubmit}
-    className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-10 space-y-8 border border-green-100"
+    className="max-w-5xl mx-auto rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-10 shadow-2xl"
 >
 
                 <div>
 
-    <label className="block mb-2 font-semibold text-gray-700">
+    <label className="block mb-2 font-semibold text-gray-300">
         Waste Title
     </label>
     {form.imageUrl && (
@@ -236,7 +272,7 @@ setTimeout(() => {
     <img
         src={form.imageUrl}
         alt="Waste"
-        className="w-48 h-36 rounded-xl object-cover mb-4"
+        className="mb-5 h-48 w-full rounded-2xl object-cover"
     />
 
 )}
@@ -252,13 +288,14 @@ setTimeout(() => {
 </div>
                 <div>
 
-    <label className="block mb-2 font-semibold text-gray-700">
+    <label className="block mb-2 font-semibold text-gray-300">
         Description
     </label>
 
     <textarea
         rows={4}
         name="description"
+        resize-none
         value={form.description}
         onChange={handleChange}
         className={inputStyle}
@@ -269,7 +306,7 @@ setTimeout(() => {
 
                 <div>
 
-    <label className="block mb-2 font-semibold text-gray-700">
+    <label className="block mb-2 font-semibold text-gray-300">
         Waste Type
     </label>
 
@@ -279,24 +316,50 @@ setTimeout(() => {
         onChange={handleChange}
         className={inputStyle}
     >
-        <option value="">Select Waste Type</option>
-        <option>PLASTIC</option>
-        <option>PAPER</option>
-        <option>METAL</option>
-        <option>GLASS</option>
-        <option>ORGANIC</option>
-        <option>E_WASTE</option>
-        <option>TEXTILE</option>
-        <option>OTHER</option>
+        <option className="bg-[#101411]" value="">
+    Select Waste Type
+</option>
+
+<option className="bg-[#101411]">
+    PLASTIC
+</option>
+
+<option className="bg-[#101411]">
+    PAPER
+</option>
+
+<option className="bg-[#101411]">
+    METAL
+</option>
+
+<option className="bg-[#101411]">
+    GLASS
+</option>
+
+<option className="bg-[#101411]">
+    ORGANIC
+</option>
+
+<option className="bg-[#101411]">
+    E_WASTE
+</option>
+
+<option className="bg-[#101411]">
+    TEXTILE
+</option>
+
+<option className="bg-[#101411]">
+    OTHER
+</option>
     </select>
 
 </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid gap-8 md:grid-cols-2">
 
       <div>
 
-        <label className="block mb-2 font-semibold text-gray-700">
+        <label className="block mb-2 font-semibold text-gray-300">
             Quantity
         </label>
 
@@ -312,7 +375,7 @@ setTimeout(() => {
 
     <div>
 
-        <label className="block mb-2 font-semibold text-gray-700">
+        <label className="block mb-2 font-semibold text-gray-300">
             Unit
         </label>
 
@@ -322,9 +385,9 @@ setTimeout(() => {
             onChange={handleChange}
             className={inputStyle}
         >
-            <option>KG</option>
-            <option>GRAM</option>
-            <option>TON</option>
+            <option className="bg-[#101411]">KG</option>
+            <option className="bg-[#101411]">GRAM</option>
+            <option className="bg-[#101411]">TON</option>
         </select>
 
     </div>
@@ -333,7 +396,7 @@ setTimeout(() => {
 
                 <div>
 
-    <label className="block mb-2 font-semibold text-gray-700">
+    <label className="block mb-2 font-semibold text-gray-300">
         Pickup Address
     </label>
 
@@ -346,7 +409,7 @@ setTimeout(() => {
     />
 
 </div>
-<div className="grid md:grid-cols-2 gap-6">
+<div className="mt-6 grid md:grid-cols-2 gap-6">
 
                 <input
                     type="number"
@@ -373,7 +436,7 @@ setTimeout(() => {
     <button
         type="button"
         onClick={getCurrentLocation}
-        className="mt-2 px-5 py-2 rounded-xl bg-green-100 text-green-700 hover:bg-green-200 transition"
+        className="rounded-2xl bg-[#A4B465]/10 px-6 py-3 font-semibold text-[#A4B465] transition hover:bg-[#A4B465]/20"
     >
 
         📍 Use Current Location
@@ -384,15 +447,30 @@ setTimeout(() => {
 
                 <button
     type="submit"
-    className="w-full py-4 rounded-xl bg-green-600 hover:bg-green-700 transition text-white text-lg font-bold shadow-lg"
->
+className="mt-4 w-full rounded-2xl bg-[#A4B465] py-4 text-lg font-bold text-black transition hover:scale-[1.01] hover:bg-[#B8C97C]">
     {editMode ? "💾 Update Waste" : "🌱 Publish Waste"}
 </button>
+<div>
+
+<label className="mb-3 block font-semibold text-gray-300">
+
+Waste Image
+
+</label>
+
 <input
-    type="file"
-    accept="image/*"
-    onChange={(e) => setImage(e.target.files[0])}
+
+type="file"
+
+accept="image/*"
+
+onChange={(e)=>setImage(e.target.files[0])}
+
+className="block w-full rounded-2xl border border-dashed border-[#A4B465]/30 bg-white/5 p-5 text-gray-400 file:mr-5 file:rounded-xl file:border-0 file:bg-[#A4B465] file:px-5 file:py-2 file:font-semibold file:text-black hover:border-[#A4B465]"
+
 />
+
+</div>
             </form>
 
         </div>

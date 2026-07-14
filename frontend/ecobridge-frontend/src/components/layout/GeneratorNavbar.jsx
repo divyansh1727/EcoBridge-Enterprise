@@ -1,36 +1,66 @@
 import { HiMenu } from "react-icons/hi";
+import { FaLeaf } from "react-icons/fa";
 
 export default function GeneratorNavbar({
     setSidebarOpen
 }) {
 
-    const name =
-        localStorage.getItem("userName");
+    const name = localStorage.getItem("userName");
 
     return (
 
-        <header className="h-16 md:h-20 bg-white shadow flex items-center justify-between px-4 md:px-8">
+        <header className="sticky top-0 z-40 flex h-20 items-center justify-between border-b border-white/10 bg-[#161B18]/90 px-5 md:px-8 backdrop-blur-xl">
 
             <div className="flex items-center gap-4">
 
                 <button
                     onClick={() => setSidebarOpen(true)}
-                    className="text-3xl text-green-700 lg:hidden"
+                    className="text-3xl text-[#A4B465] lg:hidden"
                 >
                     <HiMenu />
                 </button>
 
-                <h2 className="text-lg md:text-2xl font-bold text-green-700">
+                <div>
 
-                    Generator Dashboard
+                    <p className="text-xs uppercase tracking-[0.25em] text-[#A4B465]">
 
-                </h2>
+                        Generator Portal
+
+                    </p>
+
+                    <h2 className="text-2xl md:text-3xl font-black text-white">
+
+                        Dashboard
+
+                    </h2>
+
+                </div>
 
             </div>
 
-            <div className="font-semibold text-sm md:text-base">
+            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2">
 
-                👋 {name}
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#A4B465]/15">
+
+                    <FaLeaf className="text-[#A4B465]" />
+
+                </div>
+
+                <div className="hidden md:block">
+
+                    <p className="text-xs text-gray-400">
+
+                        Welcome back
+
+                    </p>
+
+                    <p className="font-semibold text-white">
+
+                        {name}
+
+                    </p>
+
+                </div>
 
             </div>
 

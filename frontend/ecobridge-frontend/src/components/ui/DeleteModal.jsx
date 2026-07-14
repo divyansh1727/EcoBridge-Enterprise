@@ -1,69 +1,127 @@
+import { motion, AnimatePresence } from "framer-motion";
+import { FaTrashAlt, FaTimes } from "react-icons/fa";
+import AppButton from "./AppButton";
+
 export default function DeleteModal({
     open,
     title,
     onCancel,
-    onDelete
+    onDelete,
 }) {
-
-    if (!open) return null;
 
     return (
 
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-5">
+        <AnimatePresence>
 
-            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8">
+            {open && (
 
-                <div className="text-center">
+                <motion.div
 
-                    <div className="text-6xl mb-4">
-                        🗑️
-                    </div>
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
 
-                    <h2 className="text-2xl font-bold">
-                        Delete Waste
-                    </h2>
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-5"
 
-                    <p className="text-gray-600 mt-4">
+                >
 
-                        Are you sure you want to delete
+                    <motion.div
 
-                    </p>
+                        initial={{
+                            opacity: 0,
+                            scale: 0.9,
+                            y: 20,
+                        }}
 
-                    <p className="font-semibold mt-2">
+                        animate={{
+                            opacity: 1,
+                            scale: 1,
+                            y: 0,
+                        }}
 
-                        "{title}"
+                        exit={{
+                            opacity: 0,
+                            scale: 0.9,
+                            y: 20,
+                        }}
 
-                    </p>
+                        transition={{
+                            duration: 0.25,
+                        }}
 
-                    <p className="text-red-500 mt-5">
+                        className="w-full max-w-md rounded-[32px] border border-white/10 bg-[#161B18] p-8 shadow-[0_20px_60px_rgba(0,0,0,.45)]"
 
-                        This action cannot be undone.
-
-                    </p>
-
-                </div>
-
-                <div className="flex gap-4 mt-8">
-
-                    <button
-                        onClick={onCancel}
-                        className="flex-1 py-3 rounded-xl border"
                     >
-                        Cancel
-                    </button>
 
-                    <button
-                        onClick={onDelete}
-                        className="flex-1 py-3 rounded-xl bg-red-600 text-white hover:bg-red-700"
-                    >
-                        Delete
-                    </button>
+                        <div className="text-center">
 
-                </div>
+                            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-red-500/15 text-4xl text-red-400">
 
-            </div>
+                                <FaTrashAlt />
 
-        </div>
+                            </div>
+
+                            <h2 className="mt-6 text-3xl font-black text-white">
+
+                                Delete Waste
+
+                            </h2>
+
+                            <p className="mt-5 leading-7 text-gray-400">
+
+                                Are you sure you want to permanently delete
+
+                            </p>
+
+                            <p className="mt-3 text-xl font-semibold text-[#A4B465] break-words">
+
+                                "{title}"
+
+                            </p>
+
+                            <p className="mt-6 text-sm text-red-400">
+
+                                This action cannot be undone.
+
+                            </p>
+
+                        </div>
+
+                        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+
+                            <AppButton
+                                variant="secondary"
+                                onClick={onCancel}
+                                className="flex-1"
+                            >
+
+                                <FaTimes />
+
+                                Cancel
+
+                            </AppButton>
+
+                            <AppButton
+                                variant="danger"
+                                onClick={onDelete}
+                                className="flex-1"
+                            >
+
+                                <FaTrashAlt />
+
+                                Delete
+
+                            </AppButton>
+
+                        </div>
+
+                    </motion.div>
+
+                </motion.div>
+
+            )}
+
+        </AnimatePresence>
 
     );
 

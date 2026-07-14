@@ -1,11 +1,23 @@
+server:
+  port: 8888
+
 spring:
   application:
     name: config-server
 
-  profiles:
-    include: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
 
 eureka:
   client:
     service-url:
       defaultZone: http://discovery-server:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

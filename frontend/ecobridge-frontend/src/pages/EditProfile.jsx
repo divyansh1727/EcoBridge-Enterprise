@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 import PageHeader from "../components/ui/PageHeader";
 import AppCard from "../components/ui/AppCard";
-
+import AppButton from "../components/ui/AppButton";
+import AppInput from "../components/ui/AppInput";
 export default function EditProfile() {
 
     const navigate = useNavigate();
@@ -49,6 +50,9 @@ export default function EditProfile() {
 
     }, []);
 
+
+    
+
     const handleChange = (e) => {
 
         setForm({
@@ -81,7 +85,13 @@ export default function EditProfile() {
 
             toast.success("Profile updated!");
 
-            navigate("/generator/profile");
+            const role = localStorage.getItem("userRole");
+
+navigate(
+    role === "ROLE_RECYCLER"
+        ? "/recycler/profile"
+        : "/generator/profile"
+);
 
         } catch (err) {
 
@@ -95,14 +105,14 @@ export default function EditProfile() {
 
     return (
 
-        <div className="p-6 md:p-8">
+        <div className="min-h-screen bg-[#101411] p-6 md:p-8">
 
             <PageHeader
-                title="✏️ Edit Profile"
-                subtitle="Update your personal information."
-            />
+    title="Edit Profile"
+    subtitle="Keep your EcoBridge account information up to date."
+/>
 
-            <AppCard>
+            <AppCard className="max-w-3xl">
 
                 <form
                 
@@ -112,24 +122,22 @@ export default function EditProfile() {
 
                     <div>
 
-                        <label>Name</label>
-
-                        <input
-                            name="name"
-                            value={form.name}
-                            onChange={handleChange}
-                            className="w-full mt-2 rounded-xl border p-3"
-                        />
+                        <AppInput
+    label="Full Name"
+    name="name"
+    value={form.name}
+    onChange={handleChange}
+/>
 
                     </div>
 
                     <div>
 
-                        <label>Phone Number</label>
-
-                        <input
+                        <AppInput
+    label="Phone Number"
     type="text"
     name="phoneNumber"
+    placeholder="9876543210"
     value={form.phoneNumber}
     onChange={(e) => {
 
@@ -141,23 +149,22 @@ export default function EditProfile() {
 
         setForm({
             ...form,
-            phoneNumber: value
+            phoneNumber: value,
         });
 
     }}
-    placeholder="9876543210"
-    className="w-full mt-2 rounded-xl border p-3"
 />
 
                     </div>
 
-                    <button
+                    <AppButton
+    type="submit"
                         className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl"
                     >
 
                         Save Changes
 
-                    </button>
+                    </AppButton>
 
                 </form>
 

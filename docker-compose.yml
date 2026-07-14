@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
 
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: docker,native
 
     ports:
       - "8888:8888"
@@ -25,7 +25,7 @@ services:
     networks:
       - ecobridge-network
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: docker,native
 
   auth-service:
     image: ecobridge/auth-service:1.0
@@ -34,14 +34,28 @@ services:
     depends_on:
       - config-server
       - discovery-server
+    
+    env_file:
+      - .env
     ports:
       - "8081:8081"
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: docker,native
       JWT_SECRET: "1234567890123456789012345678901234567890123456789012345678901234"
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_auth
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: divyansh123
+      # FIXED: Environment variables must be flat UPPERCASE_KEYS or standard flattened properties
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      FRONT_END_URL: "http://localhost"
+      FRONT_END_SUCCESS_REDIRECT: "http://localhost/oauth/success"
+      FRONT_END_FAILURE_REDIRECT: "http://localhost/oauth/failure"
     networks:
       - ecobridge-network
 
@@ -55,10 +69,14 @@ services:
     ports:
       - "8084:8084"
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: docker,native
+      JWT_SECRET: "1234567890123456789012345678901234567890123456789012345678901234"
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_waste
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: divyansh123
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
     networks:
       - ecobridge-network
 
@@ -72,7 +90,8 @@ services:
     ports:
       - "8085:8085"
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: docker,native
+      JWT_SECRET: "1234567890123456789012345678901234567890123456789012345678901234"
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_recycler
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: divyansh123
@@ -89,7 +108,8 @@ services:
     ports:
       - "8086:8086"
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: docker,native
+      JWT_SECRET: "1234567890123456789012345678901234567890123456789012345678901234"
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_matching
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: divyansh123
