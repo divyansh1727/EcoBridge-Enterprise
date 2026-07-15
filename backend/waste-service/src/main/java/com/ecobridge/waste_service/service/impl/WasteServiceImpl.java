@@ -7,14 +7,19 @@ import com.ecobridge.waste_service.dto.response.WasteResponse;
 import com.ecobridge.waste_service.dto.response.WasteStatsResponse;
 import com.ecobridge.waste_service.entity.Waste;
 import com.ecobridge.waste_service.enums.WasteStatus;
+import com.ecobridge.waste_service.events.WasteReservedEvent;
 import com.ecobridge.waste_service.exception.ResourceNotFoundException;
 import com.ecobridge.waste_service.mapper.WasteMapper;
+import com.ecobridge.waste_service.producer.WasteReservedProducer;
 import com.ecobridge.waste_service.repository.WasteRepository;
 import com.ecobridge.waste_service.security.CurrentUserUtil;
 import com.ecobridge.waste_service.service.WasteService;
 import lombok.RequiredArgsConstructor;
+import com.ecobridge.waste_service.events.WasteCreatedEvent;
+import com.ecobridge.waste_service.producer.KafkaProducer;
 import org.springframework.stereotype.Service;
-
+import com.ecobridge.waste_service.events.WasteCompletedEvent;
+import com.ecobridge.waste_service.producer.WasteCompletedProducer;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +29,9 @@ public class WasteServiceImpl implements WasteService {
 
     private final WasteRepository wasteRepository;
     private final WasteMapper wasteMapper;
+    private final KafkaProducer kafkaProducer;
+    private final WasteReservedProducer wasteReservedProducer;
+    private final WasteCompletedProducer wasteCompletedProducer;
 
     @Override
     public WasteResponse createWaste(CreateWasteRequest request) {
@@ -44,6 +52,19 @@ public class WasteServiceImpl implements WasteService {
                 .build();
 
         Waste savedWaste = wasteRepository.save(waste);
+
+       
+        WasteCreatedEvent event = WasteCreatedEvent.builder()
+        .wasteId(savedWaste.getId())
+        .title(savedWaste.getTitle())
+        .wasteType(savedWaste.getWasteType().name())
+        .quantity(savedWaste.getQuantity())
+        .latitude(savedWaste.getLatitude())
+        .longitude(savedWaste.getLongitude())
+        .createdAt(savedWaste.getCreatedAt())
+        .build();
+
+kafkaProducer.publishWasteCreated(event);
 
         return wasteMapper.toResponse(savedWaste);
     }
@@ -149,6 +170,16 @@ public class WasteServiceImpl implements WasteService {
 
         Waste saved =
                 wasteRepository.save(waste);
+        WasteReservedEvent event =
+                WasteReservedEvent.builder()
+                        .wasteId(saved.getId())
+                        .recyclerId(saved.getReservedBy())
+                        .wasteType(saved.getWasteType().name())
+                        .quantity(saved.getQuantity())
+                        .reservedAt(saved.getUpdatedAt())
+                        .build();
+
+        wasteReservedProducer.publish(event);
 
         return wasteMapper.toResponse(saved);
 
@@ -191,6 +222,27 @@ public class WasteServiceImpl implements WasteService {
 
         Waste saved =
                 wasteRepository.save(waste);
+                 WasteCompletedEvent event =
+        WasteCompletedEvent.builder()
+
+                .wasteId(saved.getId())
+
+                .recyclerId(saved.getReservedBy())
+
+                .wasteType(
+                        saved.getWasteType().name()
+                )
+
+                .quantity(saved.getQuantity())
+
+                .completedAt(
+                        java.time.LocalDateTime.now()
+                )
+
+                .build();
+
+wasteCompletedProducer.publish(event);
+
 
         return wasteMapper.toResponse(saved);
 

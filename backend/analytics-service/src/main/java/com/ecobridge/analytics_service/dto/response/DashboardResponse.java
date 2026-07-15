@@ -1,11 +1,13 @@
 package com.ecobridge.analytics_service.dto.response;
-
+import java.io.Serializable;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class DashboardResponse {
+public class DashboardResponse implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private long users;
 

@@ -3,11 +3,13 @@ package com.ecobridge.analytics_service;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @EnableFeignClients
 @EnableCaching
+@EnableKafka
 public class AnalyticsServiceApplication {
 
 	public static void main(String[] args) {

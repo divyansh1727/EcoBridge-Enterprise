@@ -1,5 +1,4 @@
 package com.ecobridge.analytics_service.service;
-
 import com.ecobridge.analytics_service.client.AuthClient;
 import com.ecobridge.analytics_service.client.WasteClient;
 import com.ecobridge.analytics_service.dto.response.DashboardResponse;
@@ -7,6 +6,9 @@ import com.ecobridge.analytics_service.dto.response.UserStatsResponse;
 import com.ecobridge.analytics_service.dto.response.WasteStatsResponse;
 import com.ecobridge.analytics_service.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
+import com.ecobridge.analytics_service.entity.AnalyticsStats;
+import com.ecobridge.analytics_service.repository.AnalyticsRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,16 +16,30 @@ import org.springframework.stereotype.Service;
 public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final AuthClient authClient;
-    private final WasteClient wasteClient;
+    private final AnalyticsRepository analyticsRepository;
 
-    @Override
-    public DashboardResponse getDashboardStats() {
+@Override
+@Cacheable(value = "dashboardStats")
+public DashboardResponse getDashboardStats() {
 
         UserStatsResponse users =
                 authClient.getUserStats();
 
-        WasteStatsResponse waste =
-                wasteClient.getWasteStats();
+        AnalyticsStats stats =
+        analyticsRepository.findById(1L)
+                .orElse(
+                        AnalyticsStats.builder()
+                                .id(1L)
+                                .totalWaste(0L)
+                                .totalQuantity(0.0)
+                                .plasticWaste(0L)
+                                .glassWaste(0L)
+                                .metalWaste(0L)
+                                .paperWaste(0L)
+                                .build()
+                );
+
+        
 
         return DashboardResponse.builder()
 
@@ -40,28 +56,44 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                 )
 
                 .waste(
-                        waste.getTotalWaste()
+                        stats.getTotalWaste()
                 )
 
                 .available(
-                        waste.getAvailableWaste()
-                )
+    stats.getAvailableWaste() == null
+            ? 0L
+            : stats.getAvailableWaste()
 
-                .reserved(
-                        waste.getReservedWaste()
-                )
+)
+.reserved(
+    stats.getReservedWaste() == null
+            ? 0L
+            : stats.getReservedWaste()
+)
 
-                .completed(
-                        waste.getCompletedWaste()
-                )
+.completed(
+    stats.getCompletedWaste() == null
+            ? 0L
+            :stats.getCompletedWaste()
+)
+
+
+
+
+.pickupRate(
+        stats.getPickupRate() == null
+        ? 0L
+        :stats.getPickupRate()
+)
+
 
                 .recycledKg(
-                        waste.getRecycledKg()
+                        stats.getTotalQuantity()
                 )
+                
 
-                .pickupRate(
-                        waste.getPickupRate()
-                )
+
+               
 
                 .build();
 

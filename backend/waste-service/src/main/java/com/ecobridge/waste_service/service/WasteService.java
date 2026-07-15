@@ -25,6 +25,7 @@ public interface WasteService {
     List<WasteResponse> getAllWaste();
 
     WasteStatsResponse getWasteStats();
+    
     WasteResponse reserveWaste(UUID wasteId);
 
     List<WasteResponse> getAvailableWaste();
