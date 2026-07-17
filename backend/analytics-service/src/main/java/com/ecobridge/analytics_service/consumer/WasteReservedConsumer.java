@@ -27,13 +27,16 @@ public class WasteReservedConsumer {
                 .findById(1L)
                 .orElseThrow();
 
-        stats.setReservedWaste(
-                stats.getReservedWaste() + 1
-        );
+        if (stats.getAvailableWaste() > 0) {
 
-        stats.setAvailableWaste(
-                stats.getAvailableWaste() - 1
-        );
+    stats.setAvailableWaste(
+        stats.getAvailableWaste() - 1
+    );
+
+    stats.setReservedWaste(
+        stats.getReservedWaste() + 1
+    );
+}
 
         analyticsRepository.save(stats);
 

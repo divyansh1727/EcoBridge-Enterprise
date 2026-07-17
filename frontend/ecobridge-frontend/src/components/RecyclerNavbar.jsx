@@ -1,5 +1,5 @@
 import { FaRecycle } from "react-icons/fa";
-
+import NotificationBell from "./ui/NotificationBell";
 export default function RecyclerNavbar({
     setSidebarOpen,
 }) {
@@ -8,8 +8,7 @@ export default function RecyclerNavbar({
 
     return (
 
-        <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-white/10 bg-[#161B18]/90 px-8 backdrop-blur-xl">
-
+        <header className="sticky top-0 z-40 overflow-visible flex h-20 items-center justify-between border-b border-white/10 bg-[#161B18]/90 px-8 backdrop-blur-xl">
             <div>
 
                 <p className="text-sm uppercase tracking-[0.25em] text-[#A4B465]">
@@ -26,32 +25,37 @@ export default function RecyclerNavbar({
 
             </div>
 
-            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-5 py-3">
+            <div className="flex items-center gap-4">
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#A4B465]/15">
+    <NotificationBell />
 
-                    <FaRecycle className="text-[#A4B465]" />
+    <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-5 py-3">
 
-                </div>
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#A4B465]/15">
 
-                <div>
+            <FaRecycle className="text-[#A4B465]" />
 
-                    <p className="text-xs text-gray-400">
+        </div>
 
-                        Welcome back
+        <div>
 
-                    </p>
+            <p className="text-xs text-gray-400">
 
-                    <p className="font-semibold text-white">
+                Welcome back
 
-                        {name}
+            </p>
 
-                    </p>
+            <p className="font-semibold text-white">
 
-                </div>
+                {name}
 
-            </div>
+            </p>
 
+        </div>
+
+    </div>
+
+</div>
         </header>
 
     );

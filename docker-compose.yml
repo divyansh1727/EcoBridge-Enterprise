@@ -4,13 +4,10 @@ services:
     image: ecobridge/config-server:1.0
     container_name: ecobridge-config-server
     restart: unless-stopped
-
     environment:
       SPRING_PROFILES_ACTIVE: docker,native
-
     ports:
       - "8888:8888"
-
     networks:
       - ecobridge-network
       
@@ -34,7 +31,6 @@ services:
     depends_on:
       - config-server
       - discovery-server
-    
     env_file:
       - .env
     ports:
@@ -45,7 +41,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_auth
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: divyansh123
-      # FIXED: Environment variables must be flat UPPERCASE_KEYS or standard flattened properties
       CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
@@ -121,6 +116,8 @@ services:
       - ecobridge-network
 
   analytics-service:
+    build:
+      context: ./backend/analytics-service
     image: ecobridge/analytics-service:1.0
     container_name: ecobridge-analytics-service
     restart: unless-stopped
@@ -135,6 +132,26 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_KAFKA_BOOTSTRAP_SERVERS: ecobridge-kafka:9092
       SPRING_DATA_REDIS_PORT: 6379
+    networks:
+      - ecobridge-network
+
+  notification-service:
+    build:
+      context: ./backend/notification-service
+    container_name: ecobridge-notification-service
+    image: ecobridge/notification-service:1.0
+    depends_on:
+      - discovery-server
+      - config-server
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ecobridge-kafka:9092
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/ecobridge_notification
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: divyansh123
+    ports:
+      - "8088:8088"
     networks:
       - ecobridge-network
 
@@ -171,6 +188,8 @@ services:
       - ecobridge-network
 
   api-gateway:
+    build:
+      context: ./backend/api-gateway
     image: ecobridge/api-gateway:1.0
     container_name: ecobridge-api-gateway
     restart: unless-stopped
@@ -180,6 +199,7 @@ services:
       - recycler-service
       - matching-service
       - analytics-service
+      - notification-service
     ports:
       - "8080:8080"
     environment:
@@ -188,6 +208,9 @@ services:
       - ecobridge-network
 
   frontend:
+    build:
+      context: ./frontend/ecobridge-frontend
+      dockerfile: Dockerfile
     image: ecobridge/frontend:1.0
     container_name: ecobridge-frontend
     restart: unless-stopped
@@ -197,6 +220,7 @@ services:
       - "80:80"
     networks:
       - ecobridge-network
+
 volumes:
   redis-data:
 

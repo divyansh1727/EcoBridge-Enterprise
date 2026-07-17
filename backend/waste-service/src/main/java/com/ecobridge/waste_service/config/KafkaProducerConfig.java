@@ -53,6 +53,12 @@ public class KafkaProducerConfig {
     public NewTopic wasteTopic() {
         return TopicBuilder.name("waste-events").build();
     }
+    @Bean
+public NewTopic wasteCreatedTopic() {
+    return TopicBuilder
+            .name("waste-created-events")
+            .build();
+}
 
     @Bean
     public NewTopic wasteReservedTopic() {

@@ -22,6 +22,7 @@ import RecyclerEditProfile from "../pages/RecyclerEditProfile";
 import OAuthSuccess from "../pages/OAuthSuccess";
 import OAuthFailure from "../pages/OAuthFailure";
 import NearbyRecyclers from "../pages/NearbyRecyclers";
+import Notifications from "../pages/Notifications";
 export default function AppRoutes() {
 
     return (
@@ -66,6 +67,10 @@ export default function AppRoutes() {
         path="profile"
         element={<Profile />}
     />
+    <Route
+    path="notifications"
+    element={<Notifications />}
+/>
 
     <Route
         path="edit-profile"
@@ -113,6 +118,10 @@ export default function AppRoutes() {
     path="profile"
     element={<RecyclerProfile />}
 />
+<Route
+    path="notifications"
+    element={<Notifications />}
+/>
 
 <Route
     path="edit-profile"
@@ -135,10 +144,20 @@ export default function AppRoutes() {
     path="/oauth/failure"
     element={<OAuthFailure />}
 />
+
+{/* <Route
+    path="/notifications"
+    element={
+        <ProtectedRoute>
+            <Notifications />
+        </ProtectedRoute>
+    }
+/> */}
             <Route
                 path="*"
                 element={<Navigate to="/" replace />}
             />
+            
 
         </Routes>
 

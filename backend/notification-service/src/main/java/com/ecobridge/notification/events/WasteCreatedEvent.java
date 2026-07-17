@@ -1,24 +1,22 @@
-package com.ecobridge.waste_service.events;
+package com.ecobridge.notification.events;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class WasteCreatedEvent {
 
     private UUID wasteId;
 
-    private String title;
-
     private UUID generatorId;
+
+    private String title;
 
     private String wasteType;
 

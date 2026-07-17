@@ -27,13 +27,16 @@ public class WasteCompletedConsumer {
                 .findById(1L)
                 .orElseThrow();
 
-        stats.setCompletedWaste(
-                stats.getCompletedWaste() + 1
-        );
+        if (stats.getReservedWaste() > 0) {
 
-        stats.setReservedWaste(
-                stats.getReservedWaste() - 1
-        );
+    stats.setReservedWaste(
+        stats.getReservedWaste() - 1
+    );
+
+    stats.setCompletedWaste(
+        stats.getCompletedWaste() + 1
+    );
+}
 
         if (stats.getTotalWaste() > 0) {
 

@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaArrowRight, FaTachometerAlt } from "react-icons/fa";
+import NotificationBell from "../../components/ui/NotificationBell";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

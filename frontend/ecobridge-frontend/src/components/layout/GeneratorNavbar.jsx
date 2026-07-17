@@ -1,5 +1,6 @@
 import { HiMenu } from "react-icons/hi";
 import { FaLeaf } from "react-icons/fa";
+import NotificationBell from "../ui/NotificationBell";
 
 export default function GeneratorNavbar({
     setSidebarOpen
@@ -9,7 +10,7 @@ export default function GeneratorNavbar({
 
     return (
 
-        <header className="sticky top-0 z-40 flex h-20 items-center justify-between border-b border-white/10 bg-[#161B18]/90 px-5 md:px-8 backdrop-blur-xl">
+        <header className="sticky top-0 z-40 overflow-visible flex h-20 items-center justify-between border-b border-white/10 bg-[#161B18]/90 px-5 md:px-8 backdrop-blur-xl">
 
             <div className="flex items-center gap-4">
 
@@ -38,31 +39,38 @@ export default function GeneratorNavbar({
 
             </div>
 
-            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2">
+            <div className="flex items-center gap-4">
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#A4B465]/15">
+    <NotificationBell />
 
-                    <FaLeaf className="text-[#A4B465]" />
+    <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2">
 
-                </div>
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#A4B465]/15">
 
-                <div className="hidden md:block">
+            <FaLeaf className="text-[#A4B465]" />
 
-                    <p className="text-xs text-gray-400">
+        </div>
 
-                        Welcome back
+        <div className="hidden md:block">
 
-                    </p>
+            <p className="text-xs text-gray-400">
 
-                    <p className="font-semibold text-white">
+                Welcome back
 
-                        {name}
+            </p>
 
-                    </p>
+            <p className="font-semibold text-white">
 
-                </div>
+                {name}
 
-            </div>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
 
         </header>
 

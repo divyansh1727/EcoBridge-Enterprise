@@ -1,0 +1,12 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: notification-service
+
+  profiles:
+    active: dev
+
+  config:
+    import: optional:configserver:http://config-server:8888

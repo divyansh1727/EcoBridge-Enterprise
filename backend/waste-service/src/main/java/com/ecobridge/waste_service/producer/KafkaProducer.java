@@ -15,14 +15,15 @@ public class KafkaProducer {
 
     public void publishWasteCreated(WasteCreatedEvent event) {
 
-        kafkaTemplate.send(
-                "waste-events",
-                event
-        );
-
-        log.info(
-                "Published WasteCreatedEvent : {}",
-                event.getWasteId()
-        );
-    }
+    kafkaTemplate.send("waste-created-events", event)
+            .whenComplete((result, ex) -> {
+                if (ex != null) {
+                    ex.printStackTrace();
+                    log.error("FAILED TO SEND", ex);
+                } else {
+                    log.info("Kafka ACK received. Offset={}",
+                            result.getRecordMetadata().offset());
+                }
+            });
+}
 }

@@ -55,6 +55,7 @@ public class WasteServiceImpl implements WasteService {
 
        
         WasteCreatedEvent event = WasteCreatedEvent.builder()
+        .generatorId(savedWaste.getCreatedBy())
         .wasteId(savedWaste.getId())
         .title(savedWaste.getTitle())
         .wasteType(savedWaste.getWasteType().name())
@@ -63,7 +64,6 @@ public class WasteServiceImpl implements WasteService {
         .longitude(savedWaste.getLongitude())
         .createdAt(savedWaste.getCreatedAt())
         .build();
-
 kafkaProducer.publishWasteCreated(event);
 
         return wasteMapper.toResponse(savedWaste);
