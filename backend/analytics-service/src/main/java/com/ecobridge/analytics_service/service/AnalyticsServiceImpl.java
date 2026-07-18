@@ -6,6 +6,8 @@ import com.ecobridge.analytics_service.dto.response.UserStatsResponse;
 import com.ecobridge.analytics_service.dto.response.WasteStatsResponse;
 import com.ecobridge.analytics_service.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
+import java.util.List;
+import com.ecobridge.analytics_service.dto.response.DailyWasteResponse;
 import com.ecobridge.analytics_service.entity.AnalyticsStats;
 import com.ecobridge.analytics_service.repository.AnalyticsRepository;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,16 +18,18 @@ import org.springframework.stereotype.Service;
 public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final AuthClient authClient;
+    private final WasteClient wasteClient;
     private final AnalyticsRepository analyticsRepository;
 
 @Override
 @Cacheable(value = "dashboardStats")
 public DashboardResponse getDashboardStats() {
 
-        UserStatsResponse users =
-                authClient.getUserStats();
+    UserStatsResponse users = authClient.getUserStats();
 
-        AnalyticsStats stats =
+    List<DailyWasteResponse> weeklyWaste = wasteClient.getWeeklyWaste();
+
+AnalyticsStats stats =
         analyticsRepository.findById(1L)
                 .orElse(
                         AnalyticsStats.builder()
@@ -82,7 +86,7 @@ public DashboardResponse getDashboardStats() {
 
 .pickupRate(
         stats.getPickupRate() == null
-        ? 0L
+        ? 0
         :stats.getPickupRate()
 )
 
@@ -90,6 +94,8 @@ public DashboardResponse getDashboardStats() {
                 .recycledKg(
                         stats.getTotalQuantity()
                 )
+
+                .weeklyWaste(weeklyWaste)
                 
 
 

@@ -15,6 +15,8 @@ import com.ecobridge.waste_service.repository.WasteRepository;
 import com.ecobridge.waste_service.security.CurrentUserUtil;
 import com.ecobridge.waste_service.service.WasteService;
 import lombok.RequiredArgsConstructor;
+import com.ecobridge.waste_service.dto.response.DailyWasteResponse;
+import com.ecobridge.waste_service.dto.response.DailyWasteProjection;
 import com.ecobridge.waste_service.events.WasteCreatedEvent;
 import com.ecobridge.waste_service.producer.KafkaProducer;
 import org.springframework.stereotype.Service;
@@ -336,6 +338,19 @@ wasteCompletedProducer.publish(event);
                 .build();
 
     }
+    @Override
+public List<DailyWasteResponse> getWeeklyWaste() {
+
+    return wasteRepository
+            .getWeeklyWaste()
+            .stream()
+            .map(day -> DailyWasteResponse.builder()
+                    .day(day.getDay())
+                    .count(day.getCount())
+                    .build())
+            .toList();
+
+}
 
 
 

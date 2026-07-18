@@ -69,7 +69,7 @@ export default function NearbyRecyclers() {
             {verified.length === 0 ? (
                 <p className="text-gray-400 mb-8">No verified matching partners found near this location.</p>
             ) : (
-                <div className="grid lg:grid-cols-2 gap-6 mb-12">
+                <div className="grid lg: gap-6 mb-12">
                     {verified.map((recycler) => (
                         <AppCard key={recycler.recyclerId}>
                             <h2 className="text-2xl font-bold text-[#A4B465] flex items-center gap-2">
@@ -118,7 +118,7 @@ export default function NearbyRecyclers() {
             {publicRecyclers.length === 0 ? (
                 <p className="text-gray-400">No public recycling centers detected nearby.</p>
             ) : (
-                <div className="grid lg:grid-cols-2 gap-6">
+                <div className="grid lg: gap-6">
                     {publicRecyclers.map((centre, index) => (
                         <AppCard key={index}>
                             <h2 className="text-xl font-bold text-white">

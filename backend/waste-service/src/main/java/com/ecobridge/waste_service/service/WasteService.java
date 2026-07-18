@@ -5,7 +5,7 @@ import com.ecobridge.waste_service.dto.request.UpdateWasteRequest;
 import com.ecobridge.waste_service.dto.response.RecyclerDashboardResponse;
 import com.ecobridge.waste_service.dto.response.WasteResponse;
 import com.ecobridge.waste_service.dto.response.WasteStatsResponse;
-
+import com.ecobridge.waste_service.dto.response.DailyWasteResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +35,8 @@ public interface WasteService {
     WasteResponse completePickup(UUID wasteId);
 
     List<WasteResponse> getPickupHistory();
+
+    List<DailyWasteResponse> getWeeklyWaste();
 
     RecyclerDashboardResponse getRecyclerDashboard();
 }

@@ -355,7 +355,7 @@ focus:ring-[#A4B465]/20
 
 </div>
 
-                <div className="grid gap-8 md:grid-cols-2">
+                <div className="grid gap-8 md:">
 
       <div>
 
@@ -409,7 +409,7 @@ focus:ring-[#A4B465]/20
     />
 
 </div>
-<div className="mt-6 grid md:grid-cols-2 gap-6">
+<div className="mt-6 grid md: gap-6">
 
                 <input
                     type="number"

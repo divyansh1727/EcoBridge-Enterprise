@@ -2,6 +2,7 @@ package com.ecobridge.waste_service.repository;
 
 import com.ecobridge.waste_service.entity.Waste;
 import com.ecobridge.waste_service.enums.WasteStatus;
+import com.ecobridge.waste_service.dto.response.DailyWasteProjection;
 import com.ecobridge.waste_service.enums.WasteType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,6 +40,17 @@ FROM Waste w
 WHERE w.status='COMPLETED'
 """)
     Double totalRecycledKg();
+
+    @Query(value = """
+SELECT
+TO_CHAR(created_at,'Dy') AS day,
+COUNT(*) AS count
+FROM waste
+WHERE created_at >= CURRENT_DATE - INTERVAL '6 days'
+GROUP BY DATE(created_at), TO_CHAR(created_at,'Dy')
+ORDER BY DATE(created_at)
+""", nativeQuery = true)
+List<DailyWasteProjection> getWeeklyWaste();
 
 
 

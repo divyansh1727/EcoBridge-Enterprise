@@ -66,7 +66,7 @@ export default function BrowseWaste() {
                     </div>
                 </AppCard>
             ) : (
-                <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-8 grid gap-6 md: lg:grid-cols-3">
                     {wasteList.map((waste) => (
                         <AppCard key={waste.id}>
                             {waste.imageUrl ? (
@@ -114,7 +114,7 @@ export default function BrowseWaste() {
                                 )}
                             </div>
 
-                            <div className="mt-6 grid grid-cols-2 gap-3">
+                            <div className="mt-6 grid  gap-3">
                                 <AppButton onClick={() => navigate(`/recycler/waste/${waste.id}`)}>
                                     <FaEye className="mr-2 inline" /> View
                                 </AppButton>

@@ -103,7 +103,7 @@ export default function HowItWorks() {
 
           </div>
 
-          <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-10 md: xl:grid-cols-4">
 
             {steps.map((step, index) => (
 

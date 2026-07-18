@@ -63,7 +63,7 @@ export default function PickupHistory() {
                 subtitle="View all successfully completed waste pickups."
             />
 
-            <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
+            <div className="grid lg: xl:grid-cols-3 gap-6 mt-8">
                 {history.map((waste) => (
                     <AppCard key={waste.id}>
                         {waste.imageUrl ? (

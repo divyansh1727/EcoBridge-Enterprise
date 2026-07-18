@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.List;
+import com.ecobridge.waste_service.dto.response.DailyWasteResponse;
 import java.util.UUID;
 
 @RestController
@@ -55,6 +56,15 @@ public class WasteController {
         );
 
     }
+
+    @GetMapping("/weekly")
+public ResponseEntity<List<DailyWasteResponse>> getWeeklyWaste() {
+
+    return ResponseEntity.ok(
+            wasteService.getWeeklyWaste()
+    );
+
+}
 
     @GetMapping("/my")
     public List<WasteResponse> getMyWaste() {

@@ -80,7 +80,7 @@ export default function MyPickups() {
                 subtitle="Manage all recyclable waste currently reserved by you."
             />
 
-            <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
+            <div className="grid lg: xl:grid-cols-3 gap-6 mt-8">
                 {pickups.map((waste) => (
                     <AppCard key={waste.id}>
                         {waste.imageUrl ? (

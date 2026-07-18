@@ -53,7 +53,7 @@ export default function RecyclerProfile() {
             <AppCard>
                 <div className="space-y-6 text-white">
                     {/* Profile Detail Fields */}
-                    <div className="grid gap-6 sm:grid-cols-2">
+                    <div className="grid gap-6 sm:">
                         <div>
                             <p className="text-gray-400 text-sm flex items-center gap-2 mb-1">
                                 <FaUser className="text-[#A4B465]" /> Name

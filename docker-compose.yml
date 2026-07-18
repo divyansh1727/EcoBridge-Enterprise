@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
 
   config-server:
@@ -55,6 +57,8 @@ services:
       - ecobridge-network
 
   waste-service:
+    build:
+      context: ./backend/waste-service
     image: ecobridge/waste-service:1.0
     container_name: ecobridge-waste-service
     restart: unless-stopped

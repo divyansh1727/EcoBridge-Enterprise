@@ -143,7 +143,7 @@ No mock data. No hardcoded values.
 
 </motion.div>
 
-<div className="mt-20 grid gap-8 grid-cols-2 xl:grid-cols-4">
+<div className="mt-20 grid gap-8  xl:grid-cols-4">
 
 {cards.map((card,index)=>(
 

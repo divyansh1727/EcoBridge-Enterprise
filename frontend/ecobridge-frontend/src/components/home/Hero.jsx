@@ -82,7 +82,7 @@ function MiniStat({ title, value }) {
         {title}
       </p>
 
-      <h3 className="mt-2 text-2xl font-bold text-white">
+      <h3 className="mt-2 text-3xl font-extrabold text-white">
         {value}
       </h3>
     </div>
@@ -143,6 +143,18 @@ function Feature({ icon, text }) {
 export default function Hero() {
 
   const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const weeklyWaste = stats?.weeklyWaste ?? [];
+
+const maxCount = Math.max(
+  ...weeklyWaste.map(item => item.count),
+  1
+);
+
+const totalWeekly = weeklyWaste.reduce(
+  (sum, item) => sum + item.count,
+  0
+);
 
   useEffect(() => {
 
@@ -158,13 +170,28 @@ export default function Hero() {
 
       setStats(data);
 
-    } catch (err) {
+    } finally {
 
-      console.error(err);
+    setLoading(false);
 
-    }
+}
 
   }
+  if (loading) {
+  return (
+    <section className="min-h-screen bg-[#101411] flex items-center justify-center">
+      <div className="text-center">
+
+        <div className="w-14 h-14 rounded-full border-4 border-[#A4B465] border-t-transparent animate-spin mx-auto"/>
+
+        <p className="mt-6 text-gray-400">
+          Loading Dashboard...
+        </p>
+
+      </div>
+    </section>
+  );
+}
   return (
 
 <section
@@ -236,7 +263,8 @@ export default function Hero() {
         py-24
         grid
         lg:grid-cols-2
-        gap-20
+        gap-16
+lg:gap-20
         items-center
         "
     >
@@ -264,9 +292,10 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
             className="
-                text-5xl
-                md:text-6xl
-                xl:text-7xl
+               text-4xl
+sm:text-5xl
+lg:text-6xl
+xl:text-7xl
                 font-black
                 leading-tight
                 tracking-tight
@@ -313,7 +342,7 @@ export default function Hero() {
 
         transition={{ delay:0.45 }}
 
-        className="flex flex-wrap gap-5"
+        className=""
 
     >
 
@@ -333,7 +362,8 @@ export default function Hero() {
 
         className="
             grid
-            md:grid-cols-3
+            grid-cols-1
+            sm:grid-cols-3
             gap-6
             pt-4
         "
@@ -389,7 +419,7 @@ export default function Hero() {
 
     >
 
-        <div className="grid grid-cols-3 gap-4 w-full">
+       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
 
     <MiniStat
         title="Users"
@@ -438,7 +468,7 @@ export default function Hero() {
         animate={{ opacity:1, scale:1 }}
         transition={{ duration:0.8 }}
         className="
-            rounded-[32px]
+            rounded-3xl
             border
             border-white/10
             bg-white/5
@@ -450,7 +480,12 @@ export default function Hero() {
 
         {/* Header */}
 
-        <div className="border-b border-white/10 px-8 py-6 flex items-center justify-between">
+        <div className="border-b border-white/10 px-8 py-6 flex
+flex-col
+sm:flex-row
+sm:items-center
+justify-between
+gap-4">
 
             <div>
 
@@ -482,7 +517,7 @@ export default function Hero() {
 
         {/* Stats */}
 
-        <div className="grid grid-cols-2 gap-5 p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-8">
 
             <MiniStat
     title="Waste Listings"
@@ -520,66 +555,89 @@ export default function Hero() {
                 "
             >
 
-                <div className="flex justify-between items-center">
+               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 
                     <div>
 
                         <p className="text-gray-400">
+    Last 7 Days
+</p>
 
-                            Today's Activity
+<h4 className="text-white text-xl font-semibold mt-1">
+    Weekly Waste Collection
+</h4>
 
-                        </p>
+<span className="text-orange-400 font-bold">
+    {totalWeekly} Listings
+</span>
 
-                        <h4 className="text-white text-xl font-semibold mt-1">
+                </div>
+</div>
+             
 
-                            Recycling Growth
+   {weeklyWaste.length === 0 ? (
 
-                        </h4>
+    <div className="h-40 flex items-center justify-center text-gray-500">
 
-                    </div>
+        No weekly data available
 
-                    <span className="text-orange-400 font-bold">
+    </div>
 
-                        +18%
+) : (
+
+    <div className="flex items-end gap-3 h-40 mt-8">
+
+        {weeklyWaste.map((item,index)=>{
+
+            const height = Math.max(
+    (item.count / maxCount) * 140,
+    12
+);
+
+            return(
+
+                <div
+                    key={index}
+                    className="flex flex-col items-center flex-1"
+                >
+                    <p className="mb-2 text-xs font-semibold text-white">
+    {item.count}
+</p>
+
+                    <motion.div
+                        initial={{height:0}}
+                        animate={{height}}
+                        transition={{
+                            delay:0.2+index*0.08,
+                            duration:0.6
+                        }}
+                        className="
+                            w-full
+                            rounded-t-xl
+                            bg-gradient-to-t
+                            from-[#A4B465]
+                            to-orange-400
+                        "
+                    />
+
+                    <span className="mt-2 text-xs text-gray-400">
+
+                        {item.day}
 
                     </span>
 
                 </div>
 
-                <div className="flex items-end gap-3 h-40 mt-8">
+            );
 
-                    {[45,80,60,95,75,120,140].map((h,i)=>(
+        })}
 
-                        <motion.div
+    </div>
 
-                            key={i}
-
-                            initial={{height:0}}
-
-                            animate={{height:h}}
-
-                            transition={{
-                                delay:0.2+i*0.08,
-                                duration:0.6
-                            }}
-
-                            className="
-                                flex-1
-                                rounded-t-xl
-                                bg-gradient-to-t
-                                from-[#A4B465]
-                                to-orange-400
-                            "
-
-                        />
-
-                    ))}
-
-                </div>
-
+)}
             </div>
 
-            <div className="grid grid-cols-2 gap-5 mt-6">
+            <div className="grid  gap-5 mt-6">
 
                 <div className="rounded-2xl border border-white/10 bg-[#1B211C] p-5">
 
@@ -601,7 +659,7 @@ export default function Hero() {
 
                     <h3 className="mt-2 text-3xl font-bold text-orange-400">
 
-                        {stats?.recycledKg >= 1000
+                        {(stats?.recycledKg ?? 0) >= 1000
                             ? `${(stats.recycledKg / 1000).toFixed(2)} Tons`
                             : `${stats?.recycledKg ?? 0} KG`}
 

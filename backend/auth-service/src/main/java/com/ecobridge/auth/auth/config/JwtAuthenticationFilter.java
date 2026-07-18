@@ -99,15 +99,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
+   @Override
+protected boolean shouldNotFilter(HttpServletRequest request) {
 
-        String uri = request.getRequestURI();
+    String uri = request.getRequestURI();
 
-        return uri.equals("/api/v1/auth/login")
-                || uri.equals("/api/v1/auth/register")
-                || uri.equals("/api/v1/auth/refresh")
-                || uri.startsWith("/oauth2/")
-                || uri.startsWith("/login/oauth2/");
-    }
+    return uri.startsWith("/api/v1/auth")
+            || uri.equals("/api/v1/waste/stats")
+            || uri.equals("/api/v1/waste/weekly")
+            || uri.startsWith("/actuator")
+            || uri.startsWith("/swagger-ui")
+            || uri.startsWith("/v3/api-docs");
+}
 }

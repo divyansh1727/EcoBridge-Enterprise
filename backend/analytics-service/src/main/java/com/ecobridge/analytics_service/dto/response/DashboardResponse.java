@@ -1,6 +1,7 @@
 package com.ecobridge.analytics_service.dto.response;
 import java.io.Serializable;
 import lombok.Builder;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -26,5 +27,7 @@ public class DashboardResponse implements Serializable {
     private double recycledKg;
 
     private double pickupRate;
+
+    private List<DailyWasteResponse> weeklyWaste;
 
 }
