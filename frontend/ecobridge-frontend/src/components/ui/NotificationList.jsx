@@ -21,7 +21,21 @@ export default function NotificationList({
 
         return (
             <div className="p-6 text-center text-gray-500">
-                No Notifications
+                <div className="p-8 text-center">
+
+    <div className="text-5xl mb-3">
+        📭
+    </div>
+
+    <h3 className="font-semibold text-gray-700">
+        No Notifications Yet
+    </h3>
+
+    <p className="text-sm text-gray-500 mt-2">
+        We'll notify you whenever something important happens.
+    </p>
+
+</div>
             </div>
         );
 
