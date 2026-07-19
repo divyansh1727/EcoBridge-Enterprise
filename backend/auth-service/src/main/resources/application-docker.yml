@@ -16,7 +16,6 @@ spring:
     show-sql: true
 
     
-  spring:
   security:
     oauth2:
       client:
