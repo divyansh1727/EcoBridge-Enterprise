@@ -6,8 +6,7 @@ spring:
     name: api-gateway
 
   config:
-    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888}
-
+    import: optional:configserver:https://ecobridge-enterprise.onrender.com
   cloud:
     gateway:
       server:

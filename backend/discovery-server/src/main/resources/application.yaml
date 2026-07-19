@@ -5,6 +5,9 @@ spring:
   application:
     name: discovery-server
 
+  config:
+    import: optional:configserver:https://ecobridge-enterprise.onrender.com
+
 eureka:
   client:
     register-with-eureka: false
