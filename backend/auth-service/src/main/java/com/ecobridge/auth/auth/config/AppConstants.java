@@ -8,6 +8,7 @@ public class AppConstants {
             "/v3/api-docs/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
+            "/actuator/**",
             "/api/v1/users/stats",
     };
 

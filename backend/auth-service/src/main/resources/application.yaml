@@ -8,7 +8,21 @@ spring:
     import: optional:configserver:http://config-server:8888
 
 management:
+  server:
+    port: 8081
+
   endpoints:
+    access:
+      default: unrestricted
+
     web:
       exposure:
         include: "*"
+
+  endpoint:
+    health:
+      access: unrestricted
+      show-details: always
+
+    info:
+      access: unrestricted
