@@ -23,7 +23,7 @@ public class CookieService {
             @Value("${security.jwt.cookie-http-only}") boolean cookieHttpOnly,
             @Value("${security.jwt.cookie-secure}") boolean cookieSecure,
             @Value("${security.jwt.cookie-same-site}") String cookieSameSite,
-            @Value("${security.jwt.cookie-domain}") String cookieDomain
+            @Value("${security.jwt.cookie-domain:}") String cookieDomain
     ) {
         this.refreshTokenCookieName = refreshTokenCookieName;
         this.cookieHttpOnly = cookieHttpOnly;
