@@ -5,9 +5,8 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+    service-url:
+      defaultZone: https://ecobridge-enterprise-1.onrender.com/eureka/
+  server:
+    wait-time-in-ms-when-sync-empty: 0
+    enable-self-preservation: false # Recommended for small/dev deployments to prevent false emergency alerts
