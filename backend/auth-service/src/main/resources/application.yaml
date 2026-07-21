@@ -25,4 +25,4 @@ management:
       show-details: always
 
     info:
-      access: unrestricted
+      access: unrestricted  
