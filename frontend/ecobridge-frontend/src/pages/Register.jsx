@@ -267,7 +267,8 @@ export default function Register({ onRegisterSuccess, goLogin }) {
           <div className="space-y-3 mb-6">
             <button
               type="button"
-              onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}
+              onClick={() => window.location.href =
+`${import.meta.env.VITE_API_BASE}/oauth2/authorization/google`}
               className="w-full flex items-center justify-center gap-3 rounded-xl bg-white/95 py-3 font-semibold text-gray-800 shadow hover:bg-gray-100 transition duration-200"
             >
               <FcGoogle size={24} />
@@ -276,7 +277,8 @@ export default function Register({ onRegisterSuccess, goLogin }) {
 
             <button
               type="button"
-              onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/github"}
+              onClick={() => window.location.href =
+`${import.meta.env.VITE_API_BASE}/oauth2/authorization/github`}
               className="w-full flex items-center justify-center gap-3 rounded-xl bg-[#1B211C] border border-white/10 py-3 font-semibold text-white shadow hover:bg-[#242c25] transition duration-200"
             >
               <FaGithub size={22} />

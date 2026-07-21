@@ -250,8 +250,8 @@ transition"
     <button
     type="button"
     onClick={() =>
-       window.location.href =
-                "http://localhost:8080/oauth2/authorization/google"
+      window.location.href =
+`${import.meta.env.VITE_API_BASE}/oauth2/authorization/google`
     }
     className="w-full flex items-center justify-center gap-3 rounded-xl bg-white/95 py-3 font-semibold text-gray-800 shadow hover:bg-gray-100 transition"
 >
@@ -265,7 +265,7 @@ transition"
         type="button"
         onClick={() =>
             window.location.href =
-                "http://localhost:8080/oauth2/authorization/github"
+`${import.meta.env.VITE_API_BASE}/oauth2/authorization/github`
         }
         className="w-full flex items-center justify-center gap-3 rounded-xl bg-[#1B211C]
 border
