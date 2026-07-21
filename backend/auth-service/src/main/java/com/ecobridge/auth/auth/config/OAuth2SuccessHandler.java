@@ -157,3 +157,4 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         throw e;
     }
 }
+}
