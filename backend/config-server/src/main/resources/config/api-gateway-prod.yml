@@ -1,0 +1,56 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+
+            - id: auth-route
+              uri: ${AUTH_SERVICE_URL}
+              predicates:
+                - Path=/api/v1/auth/**
+
+            - id: oauth-route
+              uri: ${AUTH_SERVICE_URL}
+              predicates:
+                - Path=/oauth2/**
+
+            - id: oauth-login-route
+              uri: ${AUTH_SERVICE_URL}
+              predicates:
+                - Path=/login/oauth2/**
+
+            - id: user-route
+              uri: ${AUTH_SERVICE_URL}
+              predicates:
+                - Path=/api/v1/users/**
+
+            - id: waste-route
+              uri: ${WASTE_SERVICE_URL}
+              predicates:
+                - Path=/api/v1/waste/**
+
+            - id: upload-route
+              uri: ${WASTE_SERVICE_URL}
+              predicates:
+                - Path=/api/v1/upload/**
+
+            - id: recycler-route
+              uri: ${RECYCLER_SERVICE_URL}
+              predicates:
+                - Path=/api/v1/recycler/**
+
+            - id: matching-route
+              uri: ${MATCHING_SERVICE_URL}
+              predicates:
+                - Path=/api/v1/matching/**
+
+            - id: analytics-route
+              uri: ${ANALYTICS_SERVICE_URL}
+              predicates:
+                - Path=/api/v1/analytics/**
+
+            - id: notification-route
+              uri: ${NOTIFICATION_SERVICE_URL}
+              predicates:
+                - Path=/api/v1/notifications/**
