@@ -43,6 +43,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        try{
         logger.info("Successful Auth...");
         logger.info(authentication.toString());
         OAuth2User oAuth2User= (OAuth2User)authentication.getPrincipal();
@@ -150,5 +151,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                         "?token=" + accessToken
         );
 
+    }
+    catch (Exception e) {
+        logger.error("OAuth Success Handler crashed", e);
+        throw e;
     }
 }

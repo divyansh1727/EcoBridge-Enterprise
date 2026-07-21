@@ -3,14 +3,15 @@ package com.ecobridge.auth.auth.config;
 public class AppConstants {
 
 
-    public static final String[] AUTH_PUBLIC_URLS = {
-            "/api/v1/auth/**",
-            "/v3/api-docs/**",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/actuator/**",
-            "/api/v1/users/stats",
-    };
+   public static final String[] AUTH_PUBLIC_URLS = {
+    "/api/v1/auth/**",
+    "/oauth2/**",
+    "/login/**",
+    "/login/oauth2/**",
+    "/actuator/**",
+    "/swagger-ui/**",
+    "/v3/api-docs/**"
+};
 
     public static final String[] AUTH_ADMIN_URLS= {
 //            "/api/v1/users/**"
