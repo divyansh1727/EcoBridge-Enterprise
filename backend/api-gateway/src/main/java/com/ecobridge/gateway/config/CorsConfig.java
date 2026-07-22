@@ -20,7 +20,8 @@ public class CorsConfig {
 
         config.setAllowedOrigins(List.of(
             "http://localhost",
-            "http://localhost:5173"
+            "http://localhost:5173",
+            "https://ebe-mauve.vercel.app"
 ));
 
         config.setAllowedHeaders(List.of("*"));
