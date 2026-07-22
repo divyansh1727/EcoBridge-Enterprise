@@ -44,7 +44,7 @@ public class SecurityConfig {
         System.out.println("========== SECURITY FILTER CHAIN LOADED ==========");
 
         http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults()).sessionManagement(sm -> sm.
-                        sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests.requestMatchers(AppConstants.AUTH_PUBLIC_URLS).permitAll()
                                 .requestMatchers(AppConstants.AUTH_ADMIN_URLS).hasRole(AppConstants.ADMIN_ROLE)
