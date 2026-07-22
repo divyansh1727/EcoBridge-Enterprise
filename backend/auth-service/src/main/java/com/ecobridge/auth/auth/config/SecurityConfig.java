@@ -55,7 +55,7 @@ public class SecurityConfig {
         "/swagger-ui.html",
                                         "/actuator/**"
 ).permitAll()
-                                .anyRequest().authenticated()).oauth2Login(oauth2 -> oauth2.successHandler(successHandler).logout(AbstractHttpConfigurer::disable)
+                                .anyRequest().authenticated()).oauth2Login(oauth2 -> oauth2.successHandler(successHandler)).logout(AbstractHttpConfigurer::disable)
                 .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, e) -> {
                     //error message
 //                    e.printStackTrace();
