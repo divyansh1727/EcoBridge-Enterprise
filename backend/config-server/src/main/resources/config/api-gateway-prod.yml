@@ -1,9 +1,7 @@
 spring:
   cloud:
     gateway:
-      server:
-        webmvc:
-          routes:
+      routes:
 
             - id: auth-route
               uri: ${AUTH_SERVICE_URL}
