@@ -73,4 +73,5 @@ management:
 logging:
   level:
     org.springframework.security: DEBUG
+    org.springframework.boot.context.config: DEBUG
     org.springframework.security.oauth2: TRACE
