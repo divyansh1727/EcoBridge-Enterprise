@@ -19,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -55,7 +56,14 @@ public class SecurityConfig {
         "/swagger-ui.html",
                                         "/actuator/**"
 ).permitAll()
-                                .anyRequest().authenticated()).oauth2Login(oauth2 -> oauth2.successHandler(successHandler)).logout(AbstractHttpConfigurer::disable)
+                                .anyRequest().authenticated()).oauth2Login(oauth2 -> oauth2
+    .authorizationEndpoint(endpoint ->
+        endpoint.authorizationRequestRepository(
+            new HttpSessionOAuth2AuthorizationRequestRepository()
+        )
+    )
+    .successHandler(successHandler)
+).logout(AbstractHttpConfigurer::disable)
                 .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, e) -> {
                     //error message
 //                    e.printStackTrace();

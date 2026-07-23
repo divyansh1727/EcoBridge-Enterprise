@@ -104,11 +104,14 @@ protected boolean shouldNotFilter(HttpServletRequest request) {
 
     String uri = request.getRequestURI();
 
-    return uri.startsWith("/api/v1/auth")
-            || uri.equals("/api/v1/waste/stats")
-            || uri.equals("/api/v1/waste/weekly")
+   return uri.startsWith("/api/v1/auth")
+            || uri.startsWith("/oauth2")
+            || uri.startsWith("/login/oauth2")
+            || uri.startsWith("/login")
             || uri.startsWith("/actuator")
             || uri.startsWith("/swagger-ui")
-            || uri.startsWith("/v3/api-docs");
+            || uri.startsWith("/v3/api-docs")
+            || uri.equals("/api/v1/waste/stats")
+            || uri.equals("/api/v1/waste/weekly");
 }
 }

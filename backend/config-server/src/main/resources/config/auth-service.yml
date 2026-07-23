@@ -1,5 +1,6 @@
 server:
   port: 8081
+  forward-headers-strategy: framework
 
 spring:
   datasource:
@@ -48,7 +49,7 @@ security:
     cookie-secure: ${JWT_COOKIE_SECURE:true}
     cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
     cookie-same-site: ${JWT_COOKIE_SAME_SITE:lax}
-    cookie-domain: ${JWT_COOKIE_DOMAIN:localhost}
+    cookie-domain: ${JWT_COOKIE_DOMAIN:}
 
 app:
   cors:
@@ -72,6 +73,6 @@ management:
 
 logging:
   level:
-    org.springframework.security: DEBUG
-    org.springframework.boot.context.config: DEBUG
-    org.springframework.security.oauth2: TRACE
+    org.springframework.security.oauth2.client.web: TRACE
+    org.springframework.web.HttpSession: TRACE
+    org.springframework.session: TRACE
