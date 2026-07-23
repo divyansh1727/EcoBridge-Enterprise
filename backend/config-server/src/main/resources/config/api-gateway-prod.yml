@@ -4,17 +4,17 @@ spring:
       routes:
 
             - id: auth-route
-              uri: https://ecobridge-enterprise-2.onrender.com
+              uri: lb://AUTH-SERVICE
               predicates:
                 - Path=/api/v1/auth/**
 
             - id: oauth-route
-              uri: https://ecobridge-enterprise-2.onrender.com
+              uri: lb://AUTH-SERVICE
               predicates:
                 - Path=/oauth2/**
 
             - id: oauth-login-route
-              uri: https://ecobridge-enterprise-2.onrender.com
+              uri: lb://AUTH-SERVICE
               predicates:
                 - Path=/login/oauth2/**
 
