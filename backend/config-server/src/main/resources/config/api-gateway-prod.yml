@@ -3,52 +3,52 @@ spring:
     gateway:
       routes:
 
-            - id: auth-route
-              uri: lb://AUTH-SERVICE
-              predicates:
-                - Path=/api/v1/auth/**
+        - id: auth-route
+          uri: https://ecobridge-enterprise-2.onrender.com
+          predicates:
+            - Path=/api/v1/auth/**
 
-            - id: oauth-route
-              uri: lb://AUTH-SERVICE
-              predicates:
-                - Path=/oauth2/**
+        - id: oauth-route
+          uri: https://ecobridge-enterprise-2.onrender.com
+          predicates:
+            - Path=/oauth2/**
 
-            - id: oauth-login-route
-              uri: lb://AUTH-SERVICE
-              predicates:
-                - Path=/login/oauth2/**
+        - id: oauth-login-route
+          uri: https://ecobridge-enterprise-2.onrender.com
+          predicates:
+            - Path=/login/oauth2/**
 
-            - id: user-route
-              uri: ${AUTH_SERVICE_URL}
-              predicates:
-                - Path=/api/v1/users/**
+        - id: user-route
+          uri: https://ecobridge-enterprise-2.onrender.com
+          predicates:
+            - Path=/api/v1/users/**
 
-            - id: waste-route
-              uri: ${WASTE_SERVICE_URL}
-              predicates:
-                - Path=/api/v1/waste/**
+        - id: waste-route
+          uri: ${WASTE_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/waste/**
 
-            - id: upload-route
-              uri: ${WASTE_SERVICE_URL}
-              predicates:
-                - Path=/api/v1/upload/**
+        - id: upload-route
+          uri: ${WASTE_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/upload/**
 
-            - id: recycler-route
-              uri: ${RECYCLER_SERVICE_URL}
-              predicates:
-                - Path=/api/v1/recycler/**
+        - id: recycler-route
+          uri: ${RECYCLER_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/recycler/**
 
-            - id: matching-route
-              uri: ${MATCHING_SERVICE_URL}
-              predicates:
-                - Path=/api/v1/matching/**
+        - id: matching-route
+          uri: ${MATCHING_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/matching/**
 
-            - id: analytics-route
-              uri: ${ANALYTICS_SERVICE_URL}
-              predicates:
-                - Path=/api/v1/analytics/**
+        - id: analytics-route
+          uri: ${ANALYTICS_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/analytics/**
 
-            - id: notification-route
-              uri: ${NOTIFICATION_SERVICE_URL}
-              predicates:
-                - Path=/api/v1/notifications/**
+        - id: notification-route
+          uri: ${NOTIFICATION_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/notifications/**
