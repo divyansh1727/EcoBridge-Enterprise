@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
 
             String token = header.substring(7);
+            System.out.println("TOKEN RECEIVED");
 
             if (!jwtService.isAccessToken(token)) {
                 filterChain.doFilter(request, response);
@@ -50,6 +51,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Jws<Claims> claims = jwtService.parse(token);
 
             JwtUser user = JwtUser.builder()
+            System.out.println("EMAIL: " + user.getEmail());
+System.out.println("ROLES: " + user.getRoles());
                     .id(jwtService.getUserId(token))
                     .email(jwtService.getEmail(token))
                     .roles(jwtService.getRoles(token))
@@ -75,8 +78,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext()
                     .setAuthentication(authentication);
+                    System.out.println(SecurityContextHolder.getContext().getAuthentication());
 
         } catch (Exception ignored) {
+                System.out.println("JWT ERROR: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);
