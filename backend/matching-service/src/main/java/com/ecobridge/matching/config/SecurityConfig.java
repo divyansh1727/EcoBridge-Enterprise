@@ -1,5 +1,8 @@
 package com.ecobridge.matching.config;
-
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
 import com.ecobridge.matching.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +42,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // Health
                         .requestMatchers("/actuator/**").permitAll()
@@ -53,4 +57,33 @@ public class SecurityConfig {
 
         return http.build();
     }
+    @Bean
+public CorsConfigurationSource corsConfigurationSource() {
+
+    CorsConfiguration config = new CorsConfiguration();
+
+    config.setAllowedOrigins(List.of(
+            "http://localhost:5173",
+            "https://ebe-mauve.vercel.app"
+    ));
+
+    config.setAllowedMethods(List.of(
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "PATCH",
+            "OPTIONS"
+    ));
+
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
+
+    source.registerCorsConfiguration("/**", config);
+
+    return source;
+}
 }
