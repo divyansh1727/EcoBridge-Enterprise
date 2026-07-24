@@ -24,31 +24,31 @@ spring:
             - Path=/api/v1/users/**
 
         - id: waste-route
-          uri: ${WASTE_SERVICE_URL}
+          uri: https://ecobridge-enterprise-3.onrender.com
           predicates:
             - Path=/api/v1/waste/**
 
         - id: upload-route
-          uri: ${WASTE_SERVICE_URL}
+          uri: https://ecobridge-enterprise-3.onrender.com
           predicates:
             - Path=/api/v1/upload/**
 
         - id: recycler-route
-          uri: ${RECYCLER_SERVICE_URL}
+          uri: https://ecobridge-enterprise-4.onrender.com
           predicates:
             - Path=/api/v1/recycler/**
 
         - id: matching-route
-          uri: ${MATCHING_SERVICE_URL}
+          uri: https://ecobridge-enterprise-6.onrender.com
           predicates:
             - Path=/api/v1/matching/**
 
         - id: analytics-route
-          uri: ${ANALYTICS_SERVICE_URL}
+          uri: https://ecobridge-enterprise-7.onrender.com
           predicates:
             - Path=/api/v1/analytics/**
 
         - id: notification-route
-          uri: ${NOTIFICATION_SERVICE_URL}
+          uri: https://ecobridge-enterprise-5.onrender.com
           predicates:
             - Path=/api/v1/notifications/**
