@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import {
     getWasteById,
-    updateWaste
+    updateWaste,
+    createWaste
 } from "../services/wasteService";
 export default function CreateWaste({
     editMode = false
@@ -170,20 +171,12 @@ if (image) {
 
 } else {
 
-    await api.post(
-        "/api/v1/waste",
-        {
-            ...form,
-            imageUrl
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-            }
-        }
-    );
+    await createWaste({
+    ...form,
+    imageUrl
+});
 
-    toast.success("🌱 Waste published successfully!");
+toast.success("🌱 Waste published successfully!");
 
 }
 

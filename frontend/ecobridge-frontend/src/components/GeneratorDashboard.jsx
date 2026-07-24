@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../api/axios";
+import { getMyWaste } from "../services/wasteService";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/ui/PageHeader";
 import StatCard from "../components/ui/StatCard";
@@ -42,16 +42,9 @@ const completedWaste =
 
                 const token = localStorage.getItem("accessToken");
 
-                const response = await api.get(
-                    "/api/v1/waste/my",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
+                const response = await getMyWaste();
 
-                setWasteList(response.data);
+setWasteList(response.data);
 
             } catch (err) {
 
