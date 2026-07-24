@@ -1,4 +1,4 @@
-import api from "../api/axios";
+import api from "../api/wasteApi";
 
 export const getMyWaste = () => {
     return api.get("/api/v1/waste/my");
