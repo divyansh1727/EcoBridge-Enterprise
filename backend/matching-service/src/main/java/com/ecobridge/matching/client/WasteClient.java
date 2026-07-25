@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @FeignClient(
-        name = "WASTE-SERVICE",
+        name = "waste-service",
         configuration = FeignConfig.class
 )
 public interface WasteClient {
