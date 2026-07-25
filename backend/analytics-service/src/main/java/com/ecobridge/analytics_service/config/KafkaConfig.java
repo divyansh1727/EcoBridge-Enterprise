@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 public class KafkaConfig {
 
     @Bean
-    public NewTopic wasteTopic() {
-        return new NewTopic("waste-events", 1, (short) 1);
-    }
+public NewTopic wasteTopic() {
+    return new NewTopic("waste-events", 1, (short) 3);
+}
 
 }
