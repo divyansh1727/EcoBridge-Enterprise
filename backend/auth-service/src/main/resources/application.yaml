@@ -6,6 +6,10 @@ spring:
     import: optional:configserver:https://ecobridge-enterprise.onrender.com
 
 eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.value}
+
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL}
