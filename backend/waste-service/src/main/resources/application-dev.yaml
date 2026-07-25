@@ -24,9 +24,14 @@ security:
     secret: ${JWT_SECRET}
 
 eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.value}
+
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL}
+      
 management:
   endpoints:
     web:
