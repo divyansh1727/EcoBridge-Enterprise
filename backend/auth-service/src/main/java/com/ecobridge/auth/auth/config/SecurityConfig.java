@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests ->
     authorizeHttpRequests
         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/v1/users/stats").permitAll()
         .requestMatchers(AppConstants.AUTH_PUBLIC_URLS).permitAll()
                                 .requestMatchers(AppConstants.AUTH_ADMIN_URLS).hasRole(AppConstants.ADMIN_ROLE)
                                 .requestMatchers(AppConstants.AUTH_GUEST_URLS).hasRole(AppConstants.GUEST_ROLE)
