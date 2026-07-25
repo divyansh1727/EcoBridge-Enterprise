@@ -8,7 +8,6 @@ import {
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getDashboardStats } from "../../services/analyticsService";
-
 export default function Stats() {
 
   const [stats, setStats] = useState(null);

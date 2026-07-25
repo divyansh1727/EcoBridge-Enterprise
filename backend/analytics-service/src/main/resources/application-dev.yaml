@@ -19,21 +19,25 @@ spring:
       port: ${SPRING_DATA_REDIS_PORT:6379}
 
   kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+
+    properties:
+      security.protocol: ${SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL}
+      sasl.mechanism: ${SPRING_KAFKA_PROPERTIES_SASL_MECHANISM}
+      sasl.jaas.config: ${SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG}
+      spring.json.trusted.packages: "*"
+
     consumer:
       group-id: analytics-group-v2
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
-    properties:
-      spring.json.trusted.packages: "*"
-
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
-
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+      
 management:
   endpoints:
     web:

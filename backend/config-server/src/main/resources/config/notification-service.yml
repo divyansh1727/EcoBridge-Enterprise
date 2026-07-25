@@ -1,12 +1,12 @@
 server:
-  port: 8088
+  port: ${PORT:8088}
 
 spring:
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/ecobridge_notification
-    username: postgres
-    password: divyansh123
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
@@ -14,7 +14,13 @@ spring:
     show-sql: true
 
   kafka:
-    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+
+    properties:
+      security.protocol: ${SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL}
+      sasl.mechanism: ${SPRING_KAFKA_PROPERTIES_SASL_MECHANISM}
+      sasl.jaas.config: ${SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG}
+      spring.json.trusted.packages: "*"
 
     consumer:
       group-id: notification-group
@@ -22,13 +28,10 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
-    properties:
-      spring.json.trusted.packages: "*"
-
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-server:8761/eureka/
+      defaultZone: ${EUREKA_SERVER_URL}
 
 management:
   endpoints:
