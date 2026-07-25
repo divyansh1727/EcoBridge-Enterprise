@@ -15,7 +15,7 @@ public class KafkaProducer {
 
     public void publishWasteCreated(WasteCreatedEvent event) {
 
-    kafkaTemplate.send("waste-created-events", event)
+    kafkaTemplate.send("waste-events", event)
             .whenComplete((result, ex) -> {
                 if (ex != null) {
                     ex.printStackTrace();

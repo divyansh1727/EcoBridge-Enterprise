@@ -15,7 +15,7 @@ public class WasteCreatedConsumer {
     private final NotificationService notificationService;
 
     @KafkaListener(
-        topics = "waste-created-events",
+        topics = "waste-events",
         containerFactory = "createdKafkaListenerContainerFactory"
 )
 public void consume(WasteCreatedEvent event) {
