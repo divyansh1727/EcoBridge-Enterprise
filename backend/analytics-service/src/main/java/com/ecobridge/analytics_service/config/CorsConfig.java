@@ -1,4 +1,4 @@
-package com.ecobridge.analytics.config;
+package com.ecobridge.analytics_service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
