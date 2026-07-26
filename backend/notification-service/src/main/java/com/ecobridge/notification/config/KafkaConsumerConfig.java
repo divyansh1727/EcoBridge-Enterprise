@@ -24,8 +24,6 @@ public class KafkaConsumerConfig {
 
     private <T> ConsumerFactory<String, T> consumerFactory(Class<T> clazz) {
 
-        JsonDeserializer<T> deserializer = new JsonDeserializer<>(clazz);
-       
         Map<String, Object> props = kafkaProperties.buildConsumerProperties();
 
         props.put(
@@ -38,13 +36,8 @@ public class KafkaConsumerConfig {
                 JsonDeserializer.class
         );
 
-        System.out.println("====================================");
-        System.out.println("Notification Consumer Config");
-        System.out.println("bootstrap.servers = " + props.get("bootstrap.servers"));
-        System.out.println("security.protocol = " + props.get("security.protocol"));
-        System.out.println("sasl.mechanism = " + props.get("sasl.mechanism"));
-        System.out.println("sasl.jaas.config = " + (props.containsKey("sasl.jaas.config") ? "[HIDDEN]" : "MISSING"));
-        System.out.println("====================================");
+        JsonDeserializer<T> deserializer = new JsonDeserializer<>(clazz, false);
+        deserializer.ignoreTypeHeaders();
 
         return new DefaultKafkaConsumerFactory<>(
                 props,
@@ -55,40 +48,25 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, WasteCreatedEvent> createdKafkaListenerContainerFactory() {
-
         ConcurrentKafkaListenerContainerFactory<String, WasteCreatedEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-
-        factory.setConsumerFactory(
-                consumerFactory(WasteCreatedEvent.class)
-        );
-
+        factory.setConsumerFactory(consumerFactory(WasteCreatedEvent.class));
         return factory;
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, WasteReservedEvent> reservedKafkaListenerContainerFactory() {
-
         ConcurrentKafkaListenerContainerFactory<String, WasteReservedEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-
-        factory.setConsumerFactory(
-                consumerFactory(WasteReservedEvent.class)
-        );
-
+        factory.setConsumerFactory(consumerFactory(WasteReservedEvent.class));
         return factory;
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, WasteCompletedEvent> completedKafkaListenerContainerFactory() {
-
         ConcurrentKafkaListenerContainerFactory<String, WasteCompletedEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-
-        factory.setConsumerFactory(
-                consumerFactory(WasteCompletedEvent.class)
-        );
-
+        factory.setConsumerFactory(consumerFactory(WasteCompletedEvent.class));
         return factory;
     }
 }
