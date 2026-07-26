@@ -1,24 +1,28 @@
 package com.ecobridge.analytics_service.config;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+
 import com.ecobridge.analytics_service.events.WasteCompletedEvent;
 import com.ecobridge.analytics_service.events.WasteCreatedEvent;
+import com.ecobridge.analytics_service.events.WasteReservedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.*;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import com.ecobridge.analytics_service.events.WasteReservedEvent;
+
 import java.util.Map;
 
 @Configuration
 public class KafkaConsumerConfig {
+
     private final KafkaProperties kafkaProperties;
 
-public KafkaConsumerConfig(KafkaProperties kafkaProperties) {
-    this.kafkaProperties = kafkaProperties;
-}
+    public KafkaConsumerConfig(KafkaProperties kafkaProperties) {
+        this.kafkaProperties = kafkaProperties;
+    }
 
     @Bean
     public ConsumerFactory<String, WasteCreatedEvent> consumerFactory() {
@@ -26,114 +30,92 @@ public KafkaConsumerConfig(KafkaProperties kafkaProperties) {
         JsonDeserializer<WasteCreatedEvent> deserializer =
                 new JsonDeserializer<>(WasteCreatedEvent.class);
 
-        deserializer.addTrustedPackages("*");
-        deserializer.setUseTypeHeaders(false);
+        Map<String, Object> props =
+                kafkaProperties.buildConsumerProperties();
 
-       Map<String, Object> props =
-        kafkaProperties.buildConsumerProperties();
+        props.put(
+                ConsumerConfig.GROUP_ID_CONFIG,
+                "analytics-group"
+        );
 
-props.put(
-        ConsumerConfig.GROUP_ID_CONFIG,
-        "analytics-group"
-);
+        props.put(
+                JsonDeserializer.TRUSTED_PACKAGES,
+                "*"
+        );
 
-props.put(
-        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-        StringDeserializer.class
-);
-
-props.put(
-        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-        JsonDeserializer.class
-);
+        props.put(
+                JsonDeserializer.USE_TYPE_INFO_HEADERS,
+                false
+        );
 
         return new DefaultKafkaConsumerFactory<>(
                 props,
                 new StringDeserializer(),
                 deserializer
         );
-
     }
 
     @Bean
-public ConsumerFactory<String, WasteReservedEvent> reservedConsumerFactory() {
+    public ConsumerFactory<String, WasteReservedEvent> reservedConsumerFactory() {
 
-    JsonDeserializer<WasteReservedEvent> deserializer =
-            new JsonDeserializer<>(WasteReservedEvent.class);
+        JsonDeserializer<WasteReservedEvent> deserializer =
+                new JsonDeserializer<>(WasteReservedEvent.class);
 
-    deserializer.addTrustedPackages("*");
-    deserializer.setUseTypeHeaders(false);
+        Map<String, Object> props =
+                kafkaProperties.buildConsumerProperties();
 
-    Map<String, Object> props =
-        kafkaProperties.buildConsumerProperties();
+        props.put(
+                ConsumerConfig.GROUP_ID_CONFIG,
+                "analytics-group"
+        );
 
-props.put(
-        ConsumerConfig.GROUP_ID_CONFIG,
-        "analytics-group"
-);
+        props.put(
+                JsonDeserializer.TRUSTED_PACKAGES,
+                "*"
+        );
 
-props.put(
-        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-        StringDeserializer.class
-);
+        props.put(
+                JsonDeserializer.USE_TYPE_INFO_HEADERS,
+                false
+        );
 
-props.put(
-        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-        JsonDeserializer.class
-);
-return new DefaultKafkaConsumerFactory<>(
-        props,
-        new StringDeserializer(),
-        deserializer
-);
-}
+        return new DefaultKafkaConsumerFactory<>(
+                props,
+                new StringDeserializer(),
+                deserializer
+        );
+    }
 
-@Bean
-public ConcurrentKafkaListenerContainerFactory<String, WasteReservedEvent>
-reservedKafkaListenerContainerFactory() {
+    @Bean
+    public ConsumerFactory<String, WasteCompletedEvent> completedConsumerFactory() {
 
-    ConcurrentKafkaListenerContainerFactory<String, WasteReservedEvent> factory =
-            new ConcurrentKafkaListenerContainerFactory<>();
+        JsonDeserializer<WasteCompletedEvent> deserializer =
+                new JsonDeserializer<>(WasteCompletedEvent.class);
 
-    factory.setConsumerFactory(
-            reservedConsumerFactory()
-    );
+        Map<String, Object> props =
+                kafkaProperties.buildConsumerProperties();
 
-    return factory;
-}
+        props.put(
+                ConsumerConfig.GROUP_ID_CONFIG,
+                "analytics-group"
+        );
 
-@Bean
-public ConsumerFactory<String, WasteCompletedEvent> completedConsumerFactory() {
+        props.put(
+                JsonDeserializer.TRUSTED_PACKAGES,
+                "*"
+        );
 
-    JsonDeserializer<WasteCompletedEvent> deserializer =
-            new JsonDeserializer<>(WasteCompletedEvent.class);
+        props.put(
+                JsonDeserializer.USE_TYPE_INFO_HEADERS,
+                false
+        );
 
-    deserializer.addTrustedPackages("*");
-    deserializer.setUseTypeHeaders(false);
-
-    Map<String, Object> props =
-        kafkaProperties.buildConsumerProperties();
-
-props.put(
-        ConsumerConfig.GROUP_ID_CONFIG,
-        "analytics-group"
-);
-
-props.put(
-        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-        StringDeserializer.class
-);
-
-props.put(
-        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-        JsonDeserializer.class
-);
-return new DefaultKafkaConsumerFactory<>(
-        props,
-        new StringDeserializer(),
-        deserializer
-);
-}
+        return new DefaultKafkaConsumerFactory<>(
+                props,
+                new StringDeserializer(),
+                deserializer
+        );
+    }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, WasteCreatedEvent>
@@ -148,17 +130,26 @@ return new DefaultKafkaConsumerFactory<>(
     }
 
     @Bean
-public ConcurrentKafkaListenerContainerFactory<String, WasteCompletedEvent>
-completedKafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, WasteReservedEvent>
+    reservedKafkaListenerContainerFactory() {
 
-    ConcurrentKafkaListenerContainerFactory<String, WasteCompletedEvent> factory =
-            new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, WasteReservedEvent> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
 
-    factory.setConsumerFactory(
-            completedConsumerFactory()
-    );
+        factory.setConsumerFactory(reservedConsumerFactory());
 
-    return factory;
-}
+        return factory;
+    }
 
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, WasteCompletedEvent>
+    completedKafkaListenerContainerFactory() {
+
+        ConcurrentKafkaListenerContainerFactory<String, WasteCompletedEvent> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+
+        factory.setConsumerFactory(completedConsumerFactory());
+
+        return factory;
+    }
 }
