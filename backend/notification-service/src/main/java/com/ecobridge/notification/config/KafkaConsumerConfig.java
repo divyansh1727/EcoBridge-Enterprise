@@ -24,27 +24,19 @@ public class KafkaConsumerConfig {
 
     private <T> ConsumerFactory<String, T> consumerFactory(Class<T> clazz) {
 
-        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+    Map<String, Object> props = kafkaProperties.buildConsumerProperties();
 
-        props.put(
-                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class
-        );
+    props.put(
+            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+            StringDeserializer.class
+    );
 
-        props.put(
-                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                JsonDeserializer.class
-        );
-
-        JsonDeserializer<T> deserializer = new JsonDeserializer<>(clazz, false);
-        deserializer.ignoreTypeHeaders();
-
-        return new DefaultKafkaConsumerFactory<>(
-                props,
-                new StringDeserializer(),
-                deserializer
-        );
-    }
+    return new DefaultKafkaConsumerFactory<>(
+            props,
+            new StringDeserializer(),
+            new JsonDeserializer<>(clazz)
+    );
+}
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, WasteCreatedEvent> createdKafkaListenerContainerFactory() {
