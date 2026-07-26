@@ -1,8 +1,9 @@
 version: '3.8'
 
 services:
-
   config-server:
+    build:
+      context: ./backend/config-server
     image: ecobridge/config-server:1.0
     container_name: ecobridge-config-server
     restart: unless-stopped
@@ -12,8 +13,10 @@ services:
       - "8888:8888"
     networks:
       - ecobridge-network
-      
+
   discovery-server:
+    build:
+      context: ./backend/discovery-server
     image: ecobridge/discovery-server:1.0
     container_name: ecobridge-discovery-server
     restart: unless-stopped
@@ -21,12 +24,14 @@ services:
       - config-server
     ports:
       - "8761:8761"
-    networks:
-      - ecobridge-network
     environment:
       SPRING_PROFILES_ACTIVE: docker,native
+    networks:
+      - ecobridge-network
 
   auth-service:
+    build:
+      context: ./backend/auth-service
     image: ecobridge/auth-service:1.0
     container_name: ecobridge-auth-service
     restart: unless-stopped
@@ -81,6 +86,8 @@ services:
       - ecobridge-network
 
   recycler-service:
+    build:
+      context: ./backend/recycler-service
     image: ecobridge/recycler-service:1.0
     container_name: ecobridge-recycler-service
     restart: unless-stopped
@@ -99,6 +106,8 @@ services:
       - ecobridge-network
 
   matching-service:
+    build:
+      context: ./backend/matching-service
     image: ecobridge/matching-service:1.0
     container_name: ecobridge-matching-service
     restart: unless-stopped
