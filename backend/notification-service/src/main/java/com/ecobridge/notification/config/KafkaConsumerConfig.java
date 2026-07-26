@@ -25,9 +25,7 @@ public class KafkaConsumerConfig {
     private <T> ConsumerFactory<String, T> consumerFactory(Class<T> clazz) {
 
         JsonDeserializer<T> deserializer = new JsonDeserializer<>(clazz);
-        deserializer.addTrustedPackages("*");
-        deserializer.setUseTypeHeaders(false);
-
+       
         Map<String, Object> props = kafkaProperties.buildConsumerProperties();
 
         props.put(
