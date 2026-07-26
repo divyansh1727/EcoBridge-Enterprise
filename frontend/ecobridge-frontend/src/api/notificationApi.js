@@ -10,7 +10,8 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   console.log("Final Request URL =", config.baseURL + config.url);
 
-  const token = localStorage.getItem("token");
+  // ✅ Use the same key that AuthContext uses
+  const token = localStorage.getItem("accessToken");
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
