@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ecobridge-config
+  namespace: ecobridge
+
+data:
+  SPRING_PROFILES_ACTIVE: "docker,native"
+
+  JWT_SECRET: "1234567890123456789012345678901234567890123456789012345678901234"
+
+  SPRING_DATASOURCE_USERNAME: "postgres"
+
+  SPRING_DATA_REDIS_HOST: "redis"
+  SPRING_DATA_REDIS_PORT: "6379"
+
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+
+  FRONT_END_URL: "http://localhost"
+  FRONT_END_SUCCESS_REDIRECT: "http://localhost/oauth/success"
+  FRONT_END_FAILURE_REDIRECT: "http://localhost/oauth/failure"
+  

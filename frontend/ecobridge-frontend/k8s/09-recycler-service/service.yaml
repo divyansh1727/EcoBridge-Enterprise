@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: recycler-service
+  namespace: ecobridge
+
+spec:
+  selector:
+    app: recycler-service
+
+  ports:
+    - port: 8085
+      targetPort: 8085
+
+  type: ClusterIP

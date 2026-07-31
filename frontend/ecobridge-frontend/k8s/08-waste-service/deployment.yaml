@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: waste-service
+  namespace: ecobridge
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: waste-service
+
+  template:
+    metadata:
+      labels:
+        app: waste-service
+
+    spec:
+      containers:
+        - name: waste-service
+          image: ecobridge/waste-service:1.0
+
+          ports:
+            - containerPort: 8084
+
+          envFrom:
+            - configMapRef:
+                name: ecobridge-config
+
+            - secretRef:
+                name: ecobridge-secret
+
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server:8888"
+
+            - name: EUREKA_SERVER_URL
+              value: "http://discovery-server:8761/eureka/"
+
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres:5432/ecobridge_waste"

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: matching-service
+  namespace: ecobridge
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: matching-service
+
+  template:
+    metadata:
+      labels:
+        app: matching-service
+
+    spec:
+      containers:
+        - name: matching-service
+          image: ecobridge/matching-service:1.0
+
+          ports:
+            - containerPort: 8086
+
+          envFrom:
+            - configMapRef:
+                name: ecobridge-config
+
+            - secretRef:
+                name: ecobridge-secret
+
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "optional:configserver:http://config-server:8888"
+
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres:5432/ecobridge_matching"
+
+            - name: EUREKA_SERVER_URL
+              value: "http://discovery-server:8761/eureka/"

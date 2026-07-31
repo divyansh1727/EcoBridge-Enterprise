@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
-	<url/>
+	<url/>kubectl describe pod config-server-5bffddb789-mpj6s -n ecobridge
 	<licenses>
 		<license/>
 	</licenses>

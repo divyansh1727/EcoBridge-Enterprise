@@ -209,6 +209,7 @@ services:
     depends_on:
       - auth-service
       - waste-service
+      
       - recycler-service
       - matching-service
       - analytics-service
