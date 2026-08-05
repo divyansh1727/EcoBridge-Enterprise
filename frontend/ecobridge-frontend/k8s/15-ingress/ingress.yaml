@@ -9,7 +9,7 @@ spec:
   ingressClassName: nginx
 
   rules:
-    - host: ecobridge.local
+    - host: 127.0.0.1.nip.io
 
       http:
         paths:

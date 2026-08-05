@@ -41,3 +41,12 @@ spec:
 
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres:5432/ecobridge_auth"
+
+            - name: FRONT_END_URL
+              value: "http://ecobridge.local"
+
+            - name: FRONT_END_SUCCESS_REDIRECT
+              value: "http://ecobridge.local/oauth/success"
+
+            - name: FRONT_END_FAILURE_REDIRECT
+              value: "http://ecobridge.local/oauth/failure"

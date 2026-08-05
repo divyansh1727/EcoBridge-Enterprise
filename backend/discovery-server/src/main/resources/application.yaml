@@ -6,7 +6,7 @@ spring:
     name: discovery-server
 
   config:
-    import: optional:configserver:https://ecobridge-enterprise.onrender.com
+    import: ${CONFIG_SERVER_URL:optional:configserver:http://config-server:8888}
 
 eureka:
   client:

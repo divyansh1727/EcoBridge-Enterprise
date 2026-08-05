@@ -1,11 +1,12 @@
 server:
   port: 8080
+  forward-headers-strategy: framework
 
 spring:
   application:
     name: api-gateway
   config:
-    import: optional:configserver:https://ecobridge-enterprise.onrender.com
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://config-server:8888}
 
 eureka:
   client:

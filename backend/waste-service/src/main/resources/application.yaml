@@ -3,7 +3,7 @@ spring:
     name: waste-service
 
   config:
-    import: optional:configserver:https://ecobridge-enterprise.onrender.com
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://config-server:8888}
 
 security:
   jwt:
