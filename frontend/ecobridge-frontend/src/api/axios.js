@@ -14,10 +14,6 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  // Remove duplicate /api if both baseURL and request contain it
-  if (config.baseURL && config.url) {
-    config.url = config.url.replace(/^\/api\/(.*)$/, "/$1");
-  }
 
   return config;
 });
