@@ -31,6 +31,8 @@ public class FeignConfig {
 
             String authorization =
                     request.getHeader("Authorization");
+                    System.out.println("=== FEIGN ===");
+System.out.println("Authorization = " + authorization);
 
             if (authorization != null) {
 
