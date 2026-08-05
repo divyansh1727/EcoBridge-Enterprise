@@ -43,6 +43,11 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+                        .requestMatchers(
+    "/api/v1/matching/public-recyclers",
+    "/api/v1/matching/nearby",
+    "/api/v1/matching/recyclers-nearby"
+).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // Health
