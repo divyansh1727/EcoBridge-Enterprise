@@ -32,8 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
-        System.out.println("REQUEST = " + request.getRequestURI());
-        System.out.println("HEADER = " + header);
+        System.out.println("========== WASTE JWT ==========");
+System.out.println("REQUEST = " + request.getRequestURI());
+System.out.println("HEADER = " + header);
+System.out.println("===============================");
 
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
