@@ -32,4 +32,12 @@ public class NearbyRecyclerResponse implements Serializable {
 
     private Double availableCapacity;
 
+    private Double offeredPrice;
+
+    private Double score;
+
+    private Double rating;
+
+    private Integer etaMinutes;
+
 }

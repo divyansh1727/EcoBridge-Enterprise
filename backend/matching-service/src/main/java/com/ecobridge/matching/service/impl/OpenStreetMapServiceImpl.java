@@ -27,7 +27,7 @@ public class OpenStreetMapServiceImpl implements OpenStreetMapService {
                 (
                   node
                     ["amenity"="recycling"]
-                    (around:10000,%f,%f);
+                    (around:25000,%f,%f);
                 );
                 out;
                 """.formatted(latitude, longitude);
@@ -80,11 +80,24 @@ public class OpenStreetMapServiceImpl implements OpenStreetMapService {
                             )
 
                             .address(
-                                    tags.getOrDefault(
-                                            "addr:street",
-                                            "Address unavailable"
-                                    ).toString()
-                            )
+
+    String.join(", ",
+
+        Optional.ofNullable(tags.get("addr:housenumber"))
+                .map(Object::toString)
+                .orElse(""),
+
+        Optional.ofNullable(tags.get("addr:street"))
+                .map(Object::toString)
+                .orElse(""),
+
+        Optional.ofNullable(tags.get("addr:city"))
+                .map(Object::toString)
+                .orElse("")
+
+    ).replaceAll("^,\\s*|,\\s*$", "")
+
+)
 
                             .latitude(
                                     ((Number) element.get("lat")).doubleValue()

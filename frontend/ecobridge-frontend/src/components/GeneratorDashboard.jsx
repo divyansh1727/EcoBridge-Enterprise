@@ -6,6 +6,7 @@ import StatCard from "../components/ui/StatCard";
 import AppCard from "../components/ui/AppCard";
 import AppButton from "../components/ui/AppButton";
 import { FaPlus } from "react-icons/fa";
+import CompareRecyclerModal from "../components/CompareRecyclerModal";
 import {
   FaRecycle,
   FaBoxOpen,
@@ -32,6 +33,8 @@ const completedWaste =
         w => w.status === "COMPLETED"
     ).length;
     const [loading, setLoading] = useState(true);
+    const [selectedWaste, setSelectedWaste] = useState(null);
+    const [showCompareModal, setShowCompareModal] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -216,10 +219,10 @@ Create Waste
 
                             </div>
 
-                            <div>
+                            <div className="flex flex-col items-end gap-4">
 
-                                <span
-className={`px-4 py-2 rounded-full font-semibold
+    <span
+        className={`px-4 py-2 rounded-full font-semibold
 
 ${waste.status==="AVAILABLE"
 ?"bg-green-500/20 text-green-400"
@@ -230,25 +233,43 @@ ${waste.status==="AVAILABLE"
 :"bg-blue-500/20 text-blue-400"
 
 }`}
->
+    >
+        {waste.status}
+    </span>
 
-{waste.status}
+    <AppButton
+        onClick={() => {
+            setSelectedWaste(waste);
+            setShowCompareModal(true);
+        }}
+    >
+        Compare Recyclers
+    </AppButton>
 
-</span>
-                               
-                            </div>
+</div>
 
                         </div>
+                       
 
                     </AppCard>
 
                 ))}
+                 <CompareRecyclerModal
+    open={showCompareModal}
+    waste={selectedWaste}
+    onClose={() => {
+        setShowCompareModal(false);
+        setSelectedWaste(null);
+    }}
+/>
 
             </div>
+            
 
         )}
 
     </div>
+    
 
 );
 }
