@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/frontend/architecture.png" alt="EcoBridge Enterprise" width="100%">
+  <img src="docs/architecture.png" alt="EcoBridge Enterprise Architecture" width="100%">
 </p>
 
 <h1 align="center">🌱 EcoBridge Enterprise</h1>
@@ -24,12 +24,12 @@ A Cloud-Native Waste Management Platform built using a scalable Microservices Ar
 
 ---
 
-# 🚀 Live Demo
+# 🚀 Live Deployment
 
-| Service | Link |
-|---------|------|
+| Component | URL |
+|-----------|-----|
 | 🌐 Frontend | https://ebe-mauve.vercel.app |
-| ⚡ API Gateway | https://ecobridge-enterprise-2.onrender.com |
+| 🚪 API Gateway | https://ecobridge-enterprise-2.onrender.com |
 
 ---
 
@@ -37,17 +37,17 @@ A Cloud-Native Waste Management Platform built using a scalable Microservices Ar
 
 ## 🎬 Complete Project Walkthrough
 
-> **Coming Soon**
+> 📺 **Watch Here**
 
-VIDEO_LINK_HERE
+`YOUTUBE_VIDEO_LINK`
 
 ---
 
-## ☸ Kubernetes Deployment
+## ☸ Kubernetes Deployment Demo
 
-> **Coming Soon**
+> 📺 **Watch Here**
 
-VIDEO_LINK_HERE
+`YOUTUBE_VIDEO_LINK`
 
 ---
 
@@ -55,7 +55,7 @@ VIDEO_LINK_HERE
 
 EcoBridge Enterprise is a cloud-native waste management platform that connects waste generators with recyclers through a scalable microservices architecture.
 
-The platform demonstrates modern backend engineering practices using Spring Boot, Spring Cloud, Kafka, Redis, Docker, Kubernetes, Prometheus and Grafana.
+The platform showcases modern backend engineering practices using Spring Boot Microservices, Spring Cloud, Kafka, Redis, Docker, Kubernetes, Prometheus, Grafana and GitHub Actions.
 
 ---
 
@@ -65,12 +65,62 @@ The platform demonstrates modern backend engineering practices using Spring Boot
 <img src="docs/frontend/architecture.png" width="100%">
 </p>
 
-📖 **Documentation**
+---
 
-- [Architecture](docs/architecture.md)
-- [API Documentation](docs/api.md)
-- [Deployment Guide](docs/deployment.md)
-- [Observability Guide](docs/observability.md)
+# 🔄 System Workflow
+
+```text
+                 User
+                   │
+                   ▼
+          React Frontend (Vercel)
+                   │
+                   ▼
+             API Gateway
+                   │
+    ┌──────────────┼──────────────┐
+    │              │              │
+ Auth Service   Waste Service   Recycler Service
+    │              │              │
+    └──────────┬───┴──────┬───────┘
+               │          │
+               ▼          ▼
+        Matching Service
+               │
+               ▼
+      Analytics & Notification
+               │
+               ▼
+ PostgreSQL • Redis • Kafka
+```
+
+---
+
+# 📖 Documentation
+
+| Document | Description |
+|----------|-------------|
+| 📄 [Architecture](docs/architecture.md) | Overall system architecture |
+| 📄 [API Reference](docs/api.md) | REST API documentation |
+| 📄 [Swagger Guide](docs/swagger.md) | Interactive API Documentation |
+| 📄 [Deployment Guide](docs/deployment.md) | Docker, Kubernetes & Render deployment |
+| 📄 [Observability](docs/observability.md) | Prometheus, Grafana & Monitoring |
+
+---
+
+# 📘 Interactive API Documentation
+
+Every microservice exposes interactive Swagger documentation.
+
+<p align="center">
+
+<img src="docs/swagger/auth-swagger.png" width="90%">
+
+</p>
+
+➡️ **Complete Swagger Documentation**
+
+📄 **[View Swagger Documentation](docs/swagger.md)**
 
 ---
 
@@ -78,14 +128,17 @@ The platform demonstrates modern backend engineering practices using Spring Boot
 
 - JWT Authentication
 - OAuth2 Login (Google & GitHub)
-- Role Based Access Control
+- Role-Based Authorization
 - Waste Management
-- Recycler Discovery
-- Nearby Waste Matching
+- Recycler Registration & Discovery
+- Intelligent Matching Engine
 - Analytics Dashboard
-- Notifications
+- Notification Service
 - Kafka Event Streaming
 - Redis Caching
+- API Gateway
+- Config Server
+- Eureka Service Discovery
 - Dockerized Microservices
 - Kubernetes Deployment
 - GitHub Actions CI/CD
@@ -122,35 +175,35 @@ The platform demonstrates modern backend engineering practices using Spring Boot
 
 ---
 
-# ☸ DevOps & Deployment
+# ☸ DevOps
 
 | Docker Images | Docker Hub |
 |---------------|------------|
-| ![](docs/DevOps%20&%20Deployment/docker-images.png) | ![](docs/DevOps%20&%20Deployment/dockerHub.png) |
+| ![](docs/devops/docker-images.png) | ![](docs/devops/dockerHub.png) |
 
-| GitHub Actions | Eureka |
-|---------------|---------|
-| ![](docs/DevOps%20&%20Deployment/github-actions.png) | ![](docs/DevOps%20&%20Deployment/eureka-dashboard.png) |
+| GitHub Actions | Eureka Dashboard |
+|---------------|------------------|
+| ![](docs/devops/github-actions.png) | ![](docs/devops/eureka-dashboard.png) |
 
 | Kubernetes Dashboard | Kubernetes Pods |
 |----------------------|-----------------|
-| ![](docs/DevOps%20&%20Deployment/Kubernetes-dashboard.png) | ![](docs/DevOps%20&%20Deployment/Kubernetes-pods.png) |
+| ![](docs/devops/Kubernetes-dashboard.png) | ![](docs/devops/Kubernetes-pods.png) |
 
 | Kubectl |
-|---------|
-| ![](docs/DevOps%20&%20Deployment/Kubectl-cmd.png) |
+|----------|
+| ![](docs/devops/Kubectl-cmd.png) |
 
 ---
 
-# 📈 Monitoring & Analytics
+# 📈 Monitoring
 
 | Grafana Authentication | CPU Metrics |
 |------------------------|-------------|
-| ![](docs/Monitoring%20&%20Analytics/grafana-auth.png) | ![](docs/Monitoring%20&%20Analytics/cpu-metrics.png) |
+| ![](docs/monitoring/grafana-auth.png) | ![](docs/monitoring/cpu-metrics.png) |
 
 | Grafana Dashboard | Prometheus |
 |-------------------|------------|
-| ![](docs/Monitoring%20&%20Analytics/grafana-metrics-2.png) | ![](docs/Monitoring%20&%20Analytics/promotheus.png) |
+| ![](docs/monitoring/grafana-metrics-2.png) | ![](docs/monitoring/promotheus.png) |
 
 ---
 
@@ -159,7 +212,7 @@ The platform demonstrates modern backend engineering practices using Spring Boot
 | Layer | Technologies |
 |-------|--------------|
 | Frontend | React, Vite, Tailwind CSS, Axios |
-| Backend | Spring Boot, Spring Security, Spring Cloud Gateway, Eureka, Config Server, OpenFeign |
+| Backend | Spring Boot, Spring Security, Spring Cloud Gateway, Config Server, Eureka, OpenFeign |
 | Database | PostgreSQL |
 | Event Streaming | Apache Kafka |
 | Caching | Redis |
@@ -182,9 +235,12 @@ EcoBridge-Enterprise
 │   ├── architecture.md
 │   ├── deployment.md
 │   ├── observability.md
+│   ├── swagger.md
+│   │
 │   ├── frontend/
-│   ├── DevOps & Deployment/
-│   └── Monitoring & Analytics/
+│   ├── devops/
+│   ├── monitoring/
+│   └── swagger/
 │
 └── README.md
 ```
@@ -194,11 +250,11 @@ EcoBridge-Enterprise
 # 🔮 Future Enhancements
 
 - Google Maps Integration
-- AI-Based Waste Classification
+- AI-powered Waste Classification
 - Push Notifications
 - Live Recycler Tracking
 - Mobile Application
-- Multi-Language Support
+- Multi-language Support
 
 ---
 
@@ -206,6 +262,6 @@ EcoBridge-Enterprise
 
 **Divyansh Singh**
 
-- GitHub: **https://github.com/divyansh1727**
-- LinkedIn: **https://www.linkedin.com/in/divyansh1727/**
-- Email: **divys2705@gmail.com**
+- 🌐 GitHub: https://github.com/divyansh1727
+- 💼 LinkedIn: https://www.linkedin.com/in/divyansh1727/
+- 📧 Email: divys2705@gmail.com
