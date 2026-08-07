@@ -32,6 +32,11 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL}
 
+# <<< ADD THIS HERE >>>
+recycler:
+  service:
+    url: https://ecobridge-enterprise-4.onrender.com
+
 management:
   endpoints:
     web:
