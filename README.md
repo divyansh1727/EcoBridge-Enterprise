@@ -29,7 +29,7 @@ A Cloud-Native Waste Management Platform built using a scalable Microservices Ar
 | Component | URL |
 |-----------|-----|
 | 🌐 Frontend | https://ebe-mauve.vercel.app |
-| 🚪 API Gateway | https://ecobridge-enterprise-2.onrender.com |
+| 🚪 API Gateway | https://ecobridge-enterprise-0.onrender.com |
 
 ---
 
@@ -62,7 +62,7 @@ The platform showcases modern backend engineering practices using Spring Boot Mi
 # 🏗 System Architecture
 
 <p align="center">
-<img src="docs/frontend/architecture.png" width="100%">
+<img src="docs/architecture.png" width="100%">
 </p>
 
 ---
