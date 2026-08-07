@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
 
+
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             System.out.println("JWT FILTER HIT");
@@ -41,6 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
 
             String token = header.substring(7);
+            System.out.println("TOKEN RECEIVED");
+            // JwtService me ya init() me
 
             if (!jwtService.isAccessToken(token)) {
                 filterChain.doFilter(request, response);
@@ -54,6 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .email(jwtService.getEmail(token))
                     .roles(jwtService.getRoles(token))
                     .build();
+                    System.out.println("EMAIL = " + user.getEmail());
+    System.out.println("ROLES = " + user.getRoles());
 
             List<SimpleGrantedAuthority> authorities =
                     user.getRoles()
@@ -76,8 +81,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext()
                     .setAuthentication(authentication);
 
-        } catch (Exception ignored) {
-        }
+        } catch (Exception e) {
+    e.printStackTrace();
+    System.out.println("JWT ERROR: " + e.getMessage());
+}
 
         filterChain.doFilter(request, response);
     }

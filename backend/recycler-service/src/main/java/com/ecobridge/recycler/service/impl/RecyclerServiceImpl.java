@@ -123,17 +123,22 @@ public class RecyclerServiceImpl implements RecyclerService {
                 .toList();
     }
     @Override
-    public List<RecyclerResponse> getEligibleRecyclers() {
+public List<RecyclerResponse> getEligibleRecyclers() {
 
-        return recyclerRepository
-                .findByStatusAndVerificationStatus(
-                        RecyclerStatus.ACTIVE,
-                        VerificationStatus.VERIFIED
-                )
-                .stream()
-                .map(recyclerMapper::toResponse)
-                .toList();
-    }
+    System.out.println(">>> SERVICE METHOD HIT <<<");
+
+    List<Recycler> recyclers =
+            recyclerRepository.findByStatusAndVerificationStatus(
+                    RecyclerStatus.ACTIVE,
+                    VerificationStatus.VERIFIED
+            );
+
+    System.out.println("Eligible recyclers = " + recyclers.size());
+
+    return recyclers.stream()
+            .map(recyclerMapper::toResponse)
+            .toList();
+}
     @Override
     public RecyclerResponse reduceCapacity(
             UUID recyclerId,

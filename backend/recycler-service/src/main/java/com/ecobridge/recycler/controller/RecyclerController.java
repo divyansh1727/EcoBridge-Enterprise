@@ -52,6 +52,8 @@ public class RecyclerController {
     }
     @GetMapping("/eligible")
     public List<RecyclerResponse> getEligibleRecyclers() {
+        System.out.println(">>> ELIGIBLE ENDPOINT HIT <<<");
+        
         return recyclerService.getEligibleRecyclers();
     }
     @PutMapping("/{id}/capacity")
