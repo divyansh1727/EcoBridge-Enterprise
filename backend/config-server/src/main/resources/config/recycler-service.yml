@@ -17,6 +17,9 @@ security:
     secret: ${JWT_SECRET}
 
 eureka:
+  instance:
+    prefer-ip-address: true
+
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL}
