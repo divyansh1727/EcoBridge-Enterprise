@@ -7,7 +7,8 @@ export const getGoogleRecyclers = async (
 ) => {
     await loadGoogleMaps();
 
-    const { Place } = await window.google.maps.importLibrary("places");
+    const { Place } =
+        await window.google.maps.importLibrary("places");
 
     const request = {
         fields: [
@@ -29,7 +30,7 @@ export const getGoogleRecyclers = async (
         },
 
         includedPrimaryTypes: [
-            "recycling_center",
+            "establishment",
         ],
 
         maxResultCount: 20,
@@ -37,12 +38,15 @@ export const getGoogleRecyclers = async (
         rankPreference: "DISTANCE",
     };
 
-    const { places } = await Place.searchNearby(request);
+    const { places } =
+        await Place.searchNearby(request);
 
     return (places || []).map((place) => ({
         id: place.id,
 
-        name: place.displayName?.text || "Google Recycler",
+        name:
+            place.displayName?.text ||
+            "Google Recycling Business",
 
         address:
             place.formattedAddress ||
@@ -51,9 +55,17 @@ export const getGoogleRecyclers = async (
         latitude: place.location?.lat(),
         longitude: place.location?.lng(),
 
-        googleMapsUri: place.googleMapsURI,
+        googleMapsUri:
+            place.googleMapsURI || null,
 
-        website: place.websiteURI || null,
+        website:
+            place.websiteURI || null,
+
+        primaryType:
+            place.primaryType || null,
+
+        types:
+            place.types || [],
 
         source: "GOOGLE",
 
