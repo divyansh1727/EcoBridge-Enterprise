@@ -14,275 +14,252 @@ const containerStyle = {
 };
 
 export default function RecyclerMap({
-
     waste,
     verifiedRecyclers,
-    publicRecyclers,
     googleRecyclers,
-
 }) {
-
     const [selected, setSelected] = useState(null);
 
     const { isLoaded } = useJsApiLoader({
-
         googleMapsApiKey:
             import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-
     });
 
     if (!isLoaded) {
-
         return (
-
             <div className="flex h-[500px] items-center justify-center rounded-xl bg-[#151A16]">
-
                 <div className="text-gray-300">
-
                     Loading Google Maps...
-
                 </div>
-
             </div>
-
         );
-
     }
 
     return (
-
         <GoogleMap
-
             mapContainerStyle={containerStyle}
-
             center={{
-
-                lat: waste.latitude,
-                lng: waste.longitude,
-
+                lat: Number(waste.latitude),
+                lng: Number(waste.longitude),
             }}
-
             zoom={12}
-
         >
 
-            {/* Waste Location */}
+            {/* =====================================
+                WASTE LOCATION
+            ====================================== */}
 
             <Marker
-
                 position={{
-
-                    lat: waste.latitude,
-                    lng: waste.longitude,
-
+                    lat: Number(waste.latitude),
+                    lng: Number(waste.longitude),
                 }}
-
                 icon="http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-
                 title="Waste Location"
-
             />
 
-            {/* EcoBridge Verified Recyclers */}
 
-            {verifiedRecyclers.map((recycler) => (
+            {/* =====================================
+                ECOBRIDGE REGISTERED RECYCLERS
+            ====================================== */}
 
-                <Marker
+            {verifiedRecyclers?.map((recycler) => {
 
-                    key={recycler.recyclerId}
+                const latitude = Number(recycler.latitude);
+                const longitude = Number(recycler.longitude);
 
-                    position={{
+                if (
+                    !Number.isFinite(latitude) ||
+                    !Number.isFinite(longitude)
+                ) {
+                    return null;
+                }
 
-                        lat: recycler.latitude,
-                        lng: recycler.longitude,
+                return (
+                    <Marker
+                        key={`ecobridge-${recycler.recyclerId}`}
+                        position={{
+                            lat: latitude,
+                            lng: longitude,
+                        }}
+                        icon="http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                        title={
+                            recycler.companyName ||
+                            "EcoBridge Recycler"
+                        }
+                        onClick={() =>
+                            setSelected({
+                                ...recycler,
+                                latitude,
+                                longitude,
+                                source: "ECOBRIDGE",
+                            })
+                        }
+                    />
+                );
+            })}
 
-                    }}
 
-                    icon="http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+            {/* =====================================
+                GOOGLE-LISTED RECYCLING BUSINESSES
+            ====================================== */}
 
-                    onClick={() => setSelected(recycler)}
+            {googleRecyclers?.map((recycler, index) => {
 
-                />
+                const latitude = Number(
+                    recycler.latitude ??
+                    recycler.location?.lat
+                );
 
-            ))}
+                const longitude = Number(
+                    recycler.longitude ??
+                    recycler.location?.lng
+                );
 
-            {/* Public Recycling Centers */}
+                if (
+                    !Number.isFinite(latitude) ||
+                    !Number.isFinite(longitude)
+                ) {
+                    return null;
+                }
 
-            {publicRecyclers.map((recycler, index) => (
+                return (
+                    <Marker
+                        key={`google-${recycler.id || index}`}
+                        position={{
+                            lat: latitude,
+                            lng: longitude,
+                        }}
+                        icon="http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
+                        title={
+                            recycler.name ||
+                            "Google Recycling Business"
+                        }
+                        onClick={() =>
+                            setSelected({
+                                ...recycler,
+                                latitude,
+                                longitude,
+                                source: "GOOGLE",
+                            })
+                        }
+                    />
+                );
+            })}
 
-                <Marker
 
-                    key={index}
-
-                    position={{
-
-                        lat: recycler.latitude,
-                        lng: recycler.longitude,
-
-                    }}
-
-                    icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-
-                    onClick={() => setSelected(recycler)}
-
-                />
-
-            ))}
-
-            {/* Google Listed Recycling Businesses */}
-
-{googleRecyclers?.map((recycler, index) => {
-    const latitude = Number(
-        recycler.latitude ?? recycler.location?.lat
-    );
-
-    const longitude = Number(
-        recycler.longitude ?? recycler.location?.lng
-    );
-
-    if (
-        !Number.isFinite(latitude) ||
-        !Number.isFinite(longitude)
-    ) {
-        return null;
-    }
-
-    return (
-        <Marker
-            key={`google-${recycler.id || index}`}
-            position={{
-                lat: latitude,
-                lng: longitude,
-            }}
-            icon="http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
-            title={recycler.name || "Google Recycling Business"}
-            onClick={() =>
-                setSelected({
-                    ...recycler,
-                    latitude,
-                    longitude,
-                    source: "GOOGLE",
-                })
-            }
-        />
-    );
-})}
+            {/* =====================================
+                INFO WINDOW
+            ====================================== */}
 
             {selected && (
-
                 <InfoWindow
-
                     position={{
-
-                        lat: selected.latitude,
-                        lng: selected.longitude,
-
+                        lat: Number(selected.latitude),
+                        lng: Number(selected.longitude),
                     }}
-
-                    onCloseClick={() => setSelected(null)}
-
+                    onCloseClick={() =>
+                        setSelected(null)
+                    }
                 >
 
-                    <div className="min-w-[220px]">
+                    <div className="min-w-[240px] text-black">
 
-                        <h3 className="font-bold text-lg">
+                        {/* Name */}
 
-                            {selected.companyName || selected.name}
-
+                        <h3 className="text-lg font-bold">
+                            {selected.companyName ||
+                                selected.name ||
+                                "Recycler"}
                         </h3>
 
-                        {"companyName" in selected && (
 
+                        {/* =================================
+                            ECOBRIDGE RECYCLER DETAILS
+                        ================================== */}
+
+                        {selected.source === "ECOBRIDGE" && (
                             <>
 
-                                <p>
+                                {selected.distanceKm !== undefined && (
+                                    <p className="mt-2">
+                                        Distance:{" "}
+                                        {selected.distanceKm?.toFixed(2)} km
+                                    </p>
+                                )}
 
-                                    Distance: {selected.distanceKm?.toFixed(2)} km
+                                {selected.offeredPrice !== undefined && (
+                                    <p>
+                                        Price: ₹
+                                        {selected.offeredPrice?.toFixed(2)}
+                                        /kg
+                                    </p>
+                                )}
 
-                                </p>
+                                {selected.rating !== undefined && (
+                                    <p>
+                                        Rating: ⭐{" "}
+                                        {selected.rating}
+                                    </p>
+                                )}
 
-                                <p>
-
-                                    Price: ₹{selected.offeredPrice?.toFixed(2)}/kg
-
-                                </p>
-
-                                <p>
-
-                                    Rating: ⭐ {selected.rating}
-
-                                </p>
-
-                                <p>
-
-                                    ETA: {selected.etaMinutes} mins
-
-                                </p>
+                                {selected.etaMinutes !== undefined && (
+                                    <p>
+                                        ETA:{" "}
+                                        {selected.etaMinutes} mins
+                                    </p>
+                                )}
 
                             </>
-
                         )}
-                        {selected?.source === "GOOGLE" && (
-    <>
-        {selected.rating !== undefined && (
-            <p>
-                Rating: ⭐ {selected.rating}
-            </p>
-        )}
 
-        {selected.address && (
-            <p className="mt-1">
-                {selected.address}
-            </p>
-        )}
 
-        {selected.website && (
-            <a
-                href={selected.website}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-block rounded bg-blue-600 px-3 py-2 text-white"
-            >
-                Website
-            </a>
-        )}
-    </>
-)}
+                        {/* =================================
+                            GOOGLE BUSINESS DETAILS
+                        ================================== */}
 
-                        {"address" in selected && selected.address && (
+                        {selected.source === "GOOGLE" && (
+                            <>
 
-                            <p>
+                                {selected.address && (
+                                    <p className="mt-2">
+                                        {selected.address}
+                                    </p>
+                                )}
 
-                                {selected.address}
+                                {selected.website && (
+                                    <a
+                                        href={selected.website}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="mt-3 inline-block rounded bg-blue-600 px-3 py-2 text-white"
+                                    >
+                                        Website
+                                    </a>
+                                )}
 
-                            </p>
-
+                            </>
                         )}
+
+
+                        {/* =================================
+                            NAVIGATE
+                        ================================== */}
 
                         <a
-
                             href={`https://www.google.com/maps/dir/?api=1&destination=${selected.latitude},${selected.longitude}`}
-
                             target="_blank"
-
-                            rel="noreferrer"
-
+                            rel="noopener noreferrer"
                             className="mt-3 inline-block rounded bg-green-600 px-3 py-2 text-white"
-
                         >
-
                             Navigate
-
                         </a>
 
                     </div>
 
                 </InfoWindow>
-
             )}
 
         </GoogleMap>
-
     );
-
 }
