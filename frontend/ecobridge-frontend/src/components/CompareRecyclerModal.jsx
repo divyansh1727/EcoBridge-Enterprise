@@ -2,10 +2,8 @@ import AppCard from "./ui/AppCard";
 import AppButton from "./ui/AppButton";
 import { useEffect, useState } from "react";
 import RecyclerMap from "./maps/RecyclerMap";
-import {
-  getNearbyRecyclers,
-  getPublicRecyclers,
-} from "../services/matchingService";
+import { getAllRecyclers } from "../services/recyclerService";
+import { getPublicRecyclers } from "../services/matchingService";
 import { recommendRecyclers } from "../utils/recommendationEngine";
 
 export default function CompareRecyclerModal({
@@ -27,29 +25,25 @@ const [loading, setLoading] = useState(false);
 
             setLoading(true);
 
-            const verifiedResponse =
-                await getNearbyRecyclers(
-                    waste.latitude,
-                    waste.longitude
-                );
+            const [verifiedResponse, publicResponse] =
+    await Promise.all([
+        getAllRecyclers(),
+        getPublicRecyclers(
+            waste.latitude,
+            waste.longitude
+        ),
+    ]);
 
-            const publicResponse =
-                await getPublicRecyclers(
-                    waste.latitude,
-                    waste.longitude
-                );
+const ranked = recommendRecyclers(
+    verifiedResponse.data,
+    waste
+);
 
-            const ranked =
-                recommendRecyclers(
-                    verifiedResponse.data.verified,
-                    waste
-                );
+setVerifiedRecyclers(ranked);
 
-            setVerifiedRecyclers(ranked);
-
-            setPublicRecyclers(
-                publicResponse.data
-            );
+setPublicRecyclers(
+    publicResponse.data
+);
 
         } catch (err) {
 
