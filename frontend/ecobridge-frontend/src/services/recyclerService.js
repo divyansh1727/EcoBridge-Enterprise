@@ -15,3 +15,7 @@ export const getRecyclerById = (id) => {
 export const updateRecycler = (id, data) => {
     return recyclerApi.put(`/api/v1/recyclers/${id}`, data);
 };
+
+export const getAllRecyclers = () => {
+    return recyclerApi.get("/api/v1/recyclers");
+};

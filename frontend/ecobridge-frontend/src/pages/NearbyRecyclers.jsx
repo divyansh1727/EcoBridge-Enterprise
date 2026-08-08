@@ -1,153 +1,673 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import PageHeader from "../components/ui/PageHeader";
 import AppCard from "../components/ui/AppCard";
 import AppButton from "../components/ui/AppButton";
 
-import { getWasteById } from "../services/wasteService";
-import { getNearbyRecyclers, getPublicRecyclers } from "../services/matchingService";
+import { getAllRecyclers } from "../services/recyclerService";
+import { getGoogleRecyclers } from "../services/googleRecyclerService";
+import { loadGoogleMaps } from "../utils/googleMaps";
 
 import {
-    FaIndustry,
+    FaRecycle,
     FaMapMarkerAlt,
-    FaTruck,
-    FaCheckCircle,
-    FaGlobe,
-    FaWeightHanging,
+    FaGoogle,
+    FaExternalLinkAlt,
 } from "react-icons/fa";
 
 export default function NearbyRecyclers() {
+
     const { wasteId } = useParams();
-    const [verified, setVerified] = useState([]);
-    const [publicRecyclers, setPublicRecyclers] = useState([]);
+
+    const [recyclers, setRecyclers] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [userLocation, setUserLocation] = useState(null);
+
+    const mapRef = useRef(null);
+    const mapInstance = useRef(null);
+    const markersRef = useRef([]);
+
     useEffect(() => {
-        const loadData = async () => {
+        loadRecyclers();
+    }, []);
+
+    const loadRecyclers = async () => {
+
+        setLoading(true);
+
+        try {
+
+            // --------------------------------------------------
+            // 1. Get Generator Location
+            // --------------------------------------------------
+
+            const position = await new Promise((resolve, reject) => {
+
+                navigator.geolocation.getCurrentPosition(
+                    resolve,
+                    reject,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                    }
+                );
+
+            });
+
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            setUserLocation({
+                latitude,
+                longitude,
+            });
+
+            // --------------------------------------------------
+            // 2. Get EcoBridge Recyclers
+            // --------------------------------------------------
+
+            let ourRecyclers = [];
+
             try {
-                const waste = await getWasteById(wasteId);
-                const latitude = waste.data.latitude;
-                const longitude = waste.data.longitude;
 
-                const verifiedResponse = await getNearbyRecyclers(latitude, longitude);
-                setVerified(verifiedResponse.data.verified || []);
+                const response = await getAllRecyclers();
 
-                const publicResponse = await getPublicRecyclers(latitude, longitude);
-                setPublicRecyclers(publicResponse.data || []);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
+                ourRecyclers = (response.data || []).map((recycler) => ({
+                    ...recycler,
+                    source: "ECOBRIDGE",
+                }));
+
+            } catch (error) {
+
+                console.error(
+                    "EcoBridge recycler fetch failed:",
+                    error
+                );
+
             }
+
+            // --------------------------------------------------
+            // 3. Get Google Recyclers
+            // --------------------------------------------------
+
+            let googleRecyclers = [];
+
+            try {
+
+                googleRecyclers =
+                    await getGoogleRecyclers(
+                        latitude,
+                        longitude
+                    );
+
+            } catch (error) {
+
+                console.error(
+                    "Google recycler search failed:",
+                    error
+                );
+
+            }
+
+            // --------------------------------------------------
+            // 4. Combine Both
+            // --------------------------------------------------
+
+            const combined = [
+                ...ourRecyclers,
+                ...googleRecyclers,
+            ];
+
+            setRecyclers(combined);
+
+        } catch (error) {
+
+            console.error(error);
+
+            toast.error(
+                "Unable to access your location"
+            );
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    };
+
+    // ==========================================================
+    // GOOGLE MAP
+    // ==========================================================
+
+    useEffect(() => {
+
+        if (
+            loading ||
+            !userLocation ||
+            !mapRef.current
+        ) {
+            return;
+        }
+
+        const initializeMap = async () => {
+
+            try {
+
+                await loadGoogleMaps();
+
+                const google = window.google;
+
+                if (!google?.maps) {
+                    throw new Error(
+                        "Google Maps failed to load"
+                    );
+                }
+
+                // --------------------------------------------------
+                // Create Map
+                // --------------------------------------------------
+
+                const center = {
+                    lat: userLocation.latitude,
+                    lng: userLocation.longitude,
+                };
+
+                mapInstance.current =
+                    new google.maps.Map(
+                        mapRef.current,
+                        {
+                            center,
+                            zoom: 12,
+                            mapTypeControl: false,
+                            streetViewControl: false,
+                            fullscreenControl: true,
+                            zoomControl: true,
+                        }
+                    );
+
+                // --------------------------------------------------
+                // Clear Old Markers
+                // --------------------------------------------------
+
+                markersRef.current.forEach((marker) => {
+                    marker.setMap(null);
+                });
+
+                markersRef.current = [];
+
+                // --------------------------------------------------
+                // Generator Location Marker
+                // --------------------------------------------------
+
+                const userMarker =
+                    new google.maps.Marker({
+                        position: center,
+                        map: mapInstance.current,
+                        title: "Your Location",
+                        icon: {
+                            url:
+                                "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                        },
+                    });
+
+                markersRef.current.push(
+                    userMarker
+                );
+
+                // --------------------------------------------------
+                // Recycler Markers
+                // --------------------------------------------------
+
+                recyclers.forEach((recycler) => {
+
+                    const lat =
+                        recycler.latitude ??
+                        recycler.location?.lat;
+
+                    const lng =
+                        recycler.longitude ??
+                        recycler.location?.lng;
+
+                    if (
+                        typeof lat !== "number" ||
+                        typeof lng !== "number"
+                    ) {
+                        return;
+                    }
+
+                    const marker =
+                        new google.maps.Marker({
+
+                            position: {
+                                lat,
+                                lng,
+                            },
+
+                            map: mapInstance.current,
+
+                            title:
+                                recycler.name ||
+                                recycler.recyclerName ||
+                                recycler.companyName ||
+                                "Recycler",
+
+                            icon: {
+                                url:
+                                    recycler.source ===
+                                    "GOOGLE"
+                                        ? "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                                        : "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+                            },
+
+                        });
+
+                    // --------------------------------------------------
+                    // Marker Info Window
+                    // --------------------------------------------------
+
+                    const name =
+                        recycler.name ||
+                        recycler.recyclerName ||
+                        recycler.companyName ||
+                        "Recycler";
+
+                    const source =
+                        recycler.source === "GOOGLE"
+                            ? "Google Listed"
+                            : "EcoBridge Recycler";
+
+                    const infoWindow =
+                        new google.maps.InfoWindow({
+                            content: `
+                                <div style="
+                                    min-width:220px;
+                                    padding:8px;
+                                    font-family:Arial,sans-serif;
+                                ">
+                                    <h3 style="
+                                        margin:0 0 6px;
+                                        font-size:16px;
+                                        font-weight:700;
+                                    ">
+                                        ${name}
+                                    </h3>
+
+                                    <p style="
+                                        margin:0 0 8px;
+                                        color:#666;
+                                        font-size:13px;
+                                    ">
+                                        ${source}
+                                    </p>
+
+                                    <p style="
+                                        margin:0;
+                                        font-size:13px;
+                                        color:#444;
+                                    ">
+                                        ${recycler.address || ""}
+                                    </p>
+                                </div>
+                            `,
+                        });
+
+                    marker.addListener(
+                        "click",
+                        () => {
+
+                            infoWindow.open({
+                                map: mapInstance.current,
+                                anchor: marker,
+                            });
+
+                        }
+                    );
+
+                    markersRef.current.push(marker);
+
+                });
+
+            } catch (error) {
+
+                console.error(
+                    "Google Map initialization failed:",
+                    error
+                );
+
+            }
+
         };
 
-        loadData();
-    }, [wasteId]);
+        initializeMap();
+
+        return () => {
+
+            markersRef.current.forEach(
+                (marker) => marker.setMap(null)
+            );
+
+            markersRef.current = [];
+
+        };
+
+    }, [
+        loading,
+        userLocation,
+        recyclers,
+    ]);
+
+    // ==========================================================
+    // LOADING
+    // ==========================================================
 
     if (loading) {
+
         return (
             <div className="flex min-h-screen items-center justify-center bg-[#101411]">
+
                 <div className="h-14 w-14 animate-spin rounded-full border-4 border-[#A4B465] border-t-transparent" />
+
             </div>
         );
+
     }
 
+    // ==========================================================
+    // PAGE
+    // ==========================================================
+
     return (
+
         <div className="min-h-screen bg-[#101411] p-6 md:p-8">
+
             <PageHeader
-                title="Recycling Partners"
-                subtitle="Verified EcoBridge recyclers and nearby public recycling centres."
+                title="Nearby Recyclers"
+                subtitle="Find EcoBridge recyclers and verified recycling businesses near you."
             />
 
-            {/* Section 1: Verified EcoBridge Partners */}
-            <h2 className="mb-8 mt-8 flex items-center gap-3 text-3xl font-bold text-white">
-                <FaCheckCircle className="text-[#A4B465]" />
-                Verified EcoBridge Partners
-            </h2>
+            {/* ==================================================
+                MAP
+            ================================================== */}
 
-            {verified.length === 0 ? (
-                <p className="text-gray-400 mb-8">No verified matching partners found near this location.</p>
-            ) : (
-                <div className="grid lg: gap-6 mb-12">
-                    {verified.map((recycler) => (
-                        <AppCard key={recycler.recyclerId}>
-                            <h2 className="text-2xl font-bold text-[#A4B465] flex items-center gap-2">
-                                <FaIndustry className="text-xl" />
-                                {recycler.companyName}
-                            </h2>
+            <AppCard className="mb-8 overflow-hidden">
 
-                            <div className="mt-4 space-y-2 text-gray-300">
-                                <p className="flex items-center gap-2">
-                                    <span className="text-gray-500">Contact:</span> {recycler.recyclerName}
-                                </p>
-                                <p className="flex items-center gap-2 text-green-400 font-semibold">
-                                    <FaTruck /> {recycler.distanceKm.toFixed(2)} km away
-                                </p>
-                                <p className="flex items-center gap-2">
-                                    <FaWeightHanging className="text-gray-400" />
-                                    <span className="text-gray-400">Available Capacity:</span> {recycler.availableCapacity} kg
-                                </p>
-                            </div>
+                <div className="mb-4 flex items-center justify-between">
 
-                            <div className="mt-6">
-                                <AppButton
-                                    className="w-full bg-green-600 hover:bg-green-700"
-                                    onClick={() =>
-                                        window.open(
-                                            `https://www.google.com/maps?q=${recycler.latitude},${recycler.longitude}`,
-                                            "_blank"
-                                        )
-                                    }
-                                >
-                                    <FaMapMarkerAlt className="mr-2 inline" />
-                                    Open in Maps
-                                </AppButton>
-                            </div>
-                        </AppCard>
-                    ))}
+                    <div>
+
+                        <h2 className="text-2xl font-bold text-white">
+                            Recycler Map
+                        </h2>
+
+                        <p className="mt-1 text-sm text-gray-400">
+                            Green = EcoBridge &nbsp; • &nbsp;
+                            Red = Google Listed &nbsp; • &nbsp;
+                            Blue = Your Location
+                        </p>
+
+                    </div>
+
+                    <div className="hidden items-center gap-4 text-sm md:flex">
+
+                        <span className="flex items-center gap-2 text-gray-300">
+                            <span className="h-3 w-3 rounded-full bg-green-500" />
+                            EcoBridge
+                        </span>
+
+                        <span className="flex items-center gap-2 text-gray-300">
+                            <span className="h-3 w-3 rounded-full bg-red-500" />
+                            Google
+                        </span>
+
+                    </div>
+
                 </div>
+
+                <div
+                    ref={mapRef}
+                    className="h-[420px] w-full rounded-2xl overflow-hidden"
+                />
+
+            </AppCard>
+
+            {/* ==================================================
+                RECYCLER LIST
+            ================================================== */}
+
+            {recyclers.length === 0 ? (
+
+                <AppCard>
+
+                    <div className="py-16 text-center">
+
+                        <FaRecycle className="mx-auto mb-5 text-6xl text-[#A4B465]" />
+
+                        <h2 className="text-2xl font-bold text-white">
+                            No recyclers found
+                        </h2>
+
+                        <p className="mt-2 text-gray-400">
+                            Try again from another location.
+                        </p>
+
+                    </div>
+
+                </AppCard>
+
+            ) : (
+
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+                    {recyclers.map((recycler, index) => {
+
+                        const lat =
+                            recycler.latitude ??
+                            recycler.location?.lat;
+
+                        const lng =
+                            recycler.longitude ??
+                            recycler.location?.lng;
+
+                        return (
+
+                            <AppCard
+                                key={`${recycler.source}-${recycler.id || index}`}
+                            >
+
+                                <div className="space-y-5">
+
+                                    {/* Header */}
+
+                                    <div className="flex items-start gap-4">
+
+                                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#A4B465]/10">
+
+                                            <FaRecycle className="text-xl text-[#A4B465]" />
+
+                                        </div>
+
+                                        <div>
+
+                                            <h2 className="text-xl font-bold text-white">
+
+                                                {recycler.name ||
+                                                    recycler.recyclerName ||
+                                                    recycler.companyName}
+
+                                            </h2>
+
+                                            <p className="mt-1 text-sm text-gray-400">
+
+                                                {recycler.address ||
+                                                    "Address unavailable"}
+
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                    {/* Source */}
+
+                                    <div>
+
+                                        {recycler.source === "GOOGLE" ? (
+
+                                            <span className="inline-flex items-center gap-2 rounded-full bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-300">
+
+                                                <FaGoogle />
+
+                                                Google Listed
+
+                                            </span>
+
+                                        ) : (
+
+                                            <span className="inline-flex items-center gap-2 rounded-full bg-[#A4B465]/10 px-3 py-1.5 text-xs font-semibold text-[#A4B465]">
+
+                                                <FaRecycle />
+
+                                                EcoBridge Recycler
+
+                                            </span>
+
+                                        )}
+
+                                    </div>
+
+                                    {/* EcoBridge Information */}
+
+                                    {recycler.source === "ECOBRIDGE" && (
+
+                                        <div className="space-y-2 text-sm text-gray-300">
+
+                                            {recycler.recyclerType && (
+
+                                                <p>
+
+                                                    <span className="text-gray-500">
+                                                        Type:
+                                                    </span>{" "}
+
+                                                    {recycler.recyclerType}
+
+                                                </p>
+
+                                            )}
+
+                                            {recycler.phone && (
+
+                                                <p>
+
+                                                    <span className="text-gray-500">
+                                                        Phone:
+                                                    </span>{" "}
+
+                                                    {recycler.phone}
+
+                                                </p>
+
+                                            )}
+
+                                            {recycler.serviceRadiusKm && (
+
+                                                <p>
+
+                                                    <span className="text-gray-500">
+                                                        Service Radius:
+                                                    </span>{" "}
+
+                                                    {recycler.serviceRadiusKm} km
+
+                                                </p>
+
+                                            )}
+
+                                        </div>
+
+                                    )}
+
+                                    {/* Actions */}
+
+                                    <div className="flex flex-wrap gap-3">
+
+                                        {/* Navigate */}
+
+                                        {typeof lat === "number" &&
+                                            typeof lng === "number" && (
+
+                                                <AppButton
+                                                    className="flex-1"
+                                                    onClick={() =>
+                                                        window.open(
+                                                            `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+                                                            "_blank"
+                                                        )
+                                                    }
+                                                >
+
+                                                    <FaMapMarkerAlt className="mr-2 inline" />
+
+                                                    Navigate
+
+                                                </AppButton>
+
+                                            )}
+
+                                        {/* Website */}
+
+                                        {recycler.source === "GOOGLE" &&
+                                            recycler.website && (
+
+                                                <a
+                                                    href={recycler.website}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex flex-1 items-center justify-center rounded-xl border border-[#A4B465]/30 px-4 py-3 font-semibold text-[#A4B465] transition hover:bg-[#A4B465]/10"
+                                                >
+                                                    Website ↗
+                                                </a>
+
+                                            )}
+
+                                        {/* Google Maps */}
+
+                                        {recycler.source === "GOOGLE" &&
+                                            recycler.googleMapsUri && (
+
+                                                <AppButton
+                                                    className="bg-blue-600 hover:bg-blue-700"
+                                                    onClick={() =>
+                                                        window.open(
+                                                            recycler.googleMapsUri,
+                                                            "_blank"
+                                                        )
+                                                    }
+                                                >
+
+                                                    <FaExternalLinkAlt />
+
+                                                </AppButton>
+
+                                            )}
+
+                                    </div>
+
+                                </div>
+
+                            </AppCard>
+
+                        );
+
+                    })}
+
+                </div>
+
             )}
 
-            {/* Section 2: Public Recycling Centres */}
-            <h2 className="text-3xl font-bold mt-12 mb-8 text-white flex items-center gap-3">
-                <FaGlobe className="text-blue-400" />
-                Public Recycling Centres
-            </h2>
-
-            {publicRecyclers.length === 0 ? (
-                <p className="text-gray-400">No public recycling centers detected nearby.</p>
-            ) : (
-                <div className="grid lg: gap-6">
-                    {publicRecyclers.map((centre, index) => (
-                        <AppCard key={index}>
-                            <h2 className="text-xl font-bold text-white">
-                                {centre.name}
-                            </h2>
-
-                            <p className="mt-3 text-gray-400 leading-relaxed">
-                                <FaMapMarkerAlt className="inline mr-2 text-gray-500" />
-                                {centre.address}
-                            </p>
-
-                            <div className="mt-6">
-                                <AppButton
-                                    className="w-full bg-blue-600 hover:bg-blue-700"
-                                    onClick={() =>
-                                        window.open(
-                                            `https://www.google.com/maps?q=${centre.latitude},${centre.longitude}`,
-                                            "_blank"
-                                        )
-                                    }
-                                >
-                                    <FaMapMarkerAlt className="mr-2 inline" />
-                                    Open in Maps
-                                </AppButton>
-                            </div>
-                        </AppCard>
-                    ))}
-                </div>
-            )}
         </div>
     );
 }
