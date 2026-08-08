@@ -7,7 +7,7 @@ import AppCard from "../components/ui/AppCard";
 import AppButton from "../components/ui/AppButton";
 import AppInput from "../components/ui/AppInput";
 
-import api from "../api/axios";
+import { createRecycler } from "../services/recyclerService";
 import { createRecycler } from "../services/recyclerService";
 
 import {
