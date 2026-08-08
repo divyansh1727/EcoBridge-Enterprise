@@ -10,8 +10,7 @@ export const getGoogleRecyclers = async (
     const { Place } =
         await window.google.maps.importLibrary("places");
 
-    const request = {
-    fields: [
+    const fields = [
         "displayName",
         "formattedAddress",
         "location",
@@ -19,25 +18,67 @@ export const getGoogleRecyclers = async (
         "primaryType",
         "websiteURI",
         "types",
-    ],
+    ];
 
-    locationRestriction: {
-        center: {
-            lat: latitude,
-            lng: longitude,
-        },
-        radius: radiusMeters,
-    },
+    const queries = [
+        "recycling center",
+        "recycling centre",
+        "scrap dealer",
+        "scrap metal dealer",
+        "waste recycling",
+        "e-waste recycling",
+    ];
 
-    maxResultCount: 20,
+    const allPlaces = [];
 
-    rankPreference: "DISTANCE",
-};
+    for (const query of queries) {
+        try {
+            const request = {
+                textQuery: query,
 
-    const { places } =
-        await Place.searchNearby(request);
+                fields,
 
-    return (places || []).map((place) => ({
+                locationBias: {
+                    center: {
+                        lat: latitude,
+                        lng: longitude,
+                    },
+                    radius: radiusMeters,
+                },
+
+                maxResultCount: 20,
+
+                language: "en",
+            };
+
+            const { places } =
+                await Place.searchByText(request);
+
+            if (places?.length) {
+                allPlaces.push(...places);
+            }
+
+        } catch (error) {
+            console.error(
+                `Google Places search failed for "${query}"`,
+                error
+            );
+        }
+    }
+
+    // Remove duplicates
+    const uniquePlaces = Array.from(
+        new Map(
+            allPlaces
+                .filter((place) => place.id)
+                .map((place) => [
+                    place.id,
+                    place,
+                ])
+        ).values()
+    );
+
+    return uniquePlaces.map((place) => ({
         id: place.id,
 
         name:
@@ -48,8 +89,11 @@ export const getGoogleRecyclers = async (
             place.formattedAddress ||
             "Address unavailable",
 
-        latitude: place.location?.lat(),
-        longitude: place.location?.lng(),
+        latitude:
+            place.location?.lat(),
+
+        longitude:
+            place.location?.lng(),
 
         googleMapsUri:
             place.googleMapsURI || null,
