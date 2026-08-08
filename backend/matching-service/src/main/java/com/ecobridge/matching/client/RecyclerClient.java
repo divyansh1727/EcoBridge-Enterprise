@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.UUID;
 
-@FeignClient(
-    name = "recycler-service",
-    url = "${recycler.service.url}"
-)
+@FeignClient(name = "recycler-service")
 public interface RecyclerClient {
 
     @GetMapping("/api/v1/recyclers/eligible")
