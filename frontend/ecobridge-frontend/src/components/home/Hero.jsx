@@ -334,22 +334,14 @@ xl:text-7xl
     </div>
 
     <motion.div
-
-        initial={{ opacity:0 }}
-
-        animate={{ opacity:1 }}
-
-        transition={{ delay:0.45 }}
-
-        className=""
-
-    >
-
-        <PrimaryButton />
-
-        <SecondaryButton />
-
-    </motion.div>
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 0.45 }}
+    className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4"
+>
+    <PrimaryButton />
+    <SecondaryButton />
+</motion.div>
 
     <motion.div
 
