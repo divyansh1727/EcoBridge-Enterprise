@@ -11,32 +11,28 @@ export const getGoogleRecyclers = async (
         await window.google.maps.importLibrary("places");
 
     const request = {
-        fields: [
-            "displayName",
-            "formattedAddress",
-            "location",
-            "googleMapsURI",
-            "primaryType",
-            "websiteURI",
-            "types",
-        ],
+    fields: [
+        "displayName",
+        "formattedAddress",
+        "location",
+        "googleMapsURI",
+        "primaryType",
+        "websiteURI",
+        "types",
+    ],
 
-        locationRestriction: {
-            center: {
-                lat: latitude,
-                lng: longitude,
-            },
-            radius: radiusMeters,
+    locationRestriction: {
+        center: {
+            lat: latitude,
+            lng: longitude,
         },
+        radius: radiusMeters,
+    },
 
-        includedPrimaryTypes: [
-            "establishment",
-        ],
+    maxResultCount: 20,
 
-        maxResultCount: 20,
-
-        rankPreference: "DISTANCE",
-    };
+    rankPreference: "DISTANCE",
+};
 
     const { places } =
         await Place.searchNearby(request);
