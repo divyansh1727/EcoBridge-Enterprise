@@ -34,109 +34,97 @@ export default function NearbyRecyclers() {
         loadRecyclers();
     }, []);
 
-    const loadRecyclers = async () => {
+   const loadRecyclers = async () => {
+    setLoading(true);
 
-        setLoading(true);
+    try {
+        // --------------------------------------------------
+        // 1. Get Generator Location
+        // --------------------------------------------------
 
-        try {
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+                resolve,
+                reject,
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                }
+            );
+        });
 
-            // --------------------------------------------------
-            // 1. Get Generator Location
-            // --------------------------------------------------
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
 
-            const position = await new Promise((resolve, reject) => {
+        setUserLocation({
+            latitude,
+            longitude,
+        });
 
-                navigator.geolocation.getCurrentPosition(
-                    resolve,
-                    reject,
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 10000,
-                    }
-                );
+        // --------------------------------------------------
+        // 2. Get BOTH sources independently
+        // --------------------------------------------------
 
-            });
+        const [ecoBridgeResult, googleResult] =
+            await Promise.allSettled([
+                getAllRecyclers(),
+                getGoogleRecyclers(latitude, longitude),
+            ]);
 
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
+        // --------------------------------------------------
+        // 3. EcoBridge recyclers
+        // --------------------------------------------------
 
-            setUserLocation({
-                latitude,
-                longitude,
-            });
+        let ourRecyclers = [];
 
-            // --------------------------------------------------
-            // 2. Get EcoBridge Recyclers
-            // --------------------------------------------------
-
-            let ourRecyclers = [];
-
-            try {
-
-                const response = await getAllRecyclers();
-
-                ourRecyclers = (response.data || []).map((recycler) => ({
+        if (ecoBridgeResult.status === "fulfilled") {
+            ourRecyclers = (ecoBridgeResult.value.data || []).map(
+                (recycler) => ({
                     ...recycler,
                     source: "ECOBRIDGE",
-                }));
-
-            } catch (error) {
-
-                console.error(
-                    "EcoBridge recycler fetch failed:",
-                    error
-                );
-
-            }
-
-            // --------------------------------------------------
-            // 3. Get Google Recyclers
-            // --------------------------------------------------
-
-            let googleRecyclers = [];
-
-            try {
-
-                googleRecyclers =
-                    await getGoogleRecyclers(
-                        latitude,
-                        longitude
-                    );
-
-            } catch (error) {
-
-                console.error(
-                    "Google recycler search failed:",
-                    error
-                );
-
-            }
-
-            // --------------------------------------------------
-            // 4. Combine Both
-            // --------------------------------------------------
-
-            const combined = [
-                ...ourRecyclers,
-                ...googleRecyclers,
-            ];
-
-            setRecyclers(combined);
-
-        } catch (error) {
-
-            console.error(error);
-
-            toast.error(
-                "Unable to access your location"
+                })
             );
-
-        } finally {
-
-            setLoading(false);
-
+        } else {
+            console.warn(
+                "EcoBridge recycler service unavailable:",
+                ecoBridgeResult.reason
+            );
         }
-    };
+
+        // --------------------------------------------------
+        // 4. Google recyclers
+        // --------------------------------------------------
+
+        let googleRecyclers = [];
+
+        if (googleResult.status === "fulfilled") {
+            googleRecyclers = googleResult.value || [];
+        } else {
+            console.warn(
+                "Google recycler search failed:",
+                googleResult.reason
+            );
+        }
+
+        // --------------------------------------------------
+        // 5. Combine both
+        // --------------------------------------------------
+
+        setRecyclers([
+            ...ourRecyclers,
+            ...googleRecyclers,
+        ]);
+
+    } catch (error) {
+        console.error(error);
+
+        toast.error(
+            "Unable to access your location"
+        );
+    } finally {
+        setLoading(false);
+    }
+};
 
     // ==========================================================
     // GOOGLE MAP
