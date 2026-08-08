@@ -1,6 +1,7 @@
 import StatCard from "./ui/StatCard";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
     getRecyclerDashboard
 } from "../services/wasteService"
@@ -11,6 +12,7 @@ import {
 } from "react-icons/fa";;
 
 export default function RecyclerDashboard() {
+    const navigate = useNavigate();
   const [stats, setStats] = useState({
 
     availableWaste: 0,
@@ -98,6 +100,14 @@ return(
 />
 
     </div>
+    <div className="mt-8">
+    <button
+        onClick={() => navigate("/recycler/details")}
+        className="rounded-xl bg-[#A4B465] px-5 py-3 font-semibold text-[#101411] transition hover:bg-[#b5c77a]"
+    >
+        Complete Recycler Details
+    </button>
+</div>
 
 </div>
 );
