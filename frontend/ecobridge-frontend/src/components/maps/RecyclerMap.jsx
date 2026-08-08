@@ -18,6 +18,7 @@ export default function RecyclerMap({
     waste,
     verifiedRecyclers,
     publicRecyclers,
+    googleRecyclers,
 
 }) {
 
@@ -128,6 +129,45 @@ export default function RecyclerMap({
 
             ))}
 
+            {/* Google Listed Recycling Businesses */}
+
+{googleRecyclers?.map((recycler, index) => {
+    const latitude = Number(
+        recycler.latitude ?? recycler.location?.lat
+    );
+
+    const longitude = Number(
+        recycler.longitude ?? recycler.location?.lng
+    );
+
+    if (
+        !Number.isFinite(latitude) ||
+        !Number.isFinite(longitude)
+    ) {
+        return null;
+    }
+
+    return (
+        <Marker
+            key={`google-${recycler.id || index}`}
+            position={{
+                lat: latitude,
+                lng: longitude,
+            }}
+            icon="http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
+            title={recycler.name || "Google Recycling Business"}
+            onClick={() =>
+                setSelected({
+                    ...recycler,
+                    latitude,
+                    longitude,
+                    source: "GOOGLE",
+                })
+            }
+        />
+    );
+})}
+
             {selected && (
 
                 <InfoWindow
@@ -182,6 +222,32 @@ export default function RecyclerMap({
                             </>
 
                         )}
+                        {selected?.source === "GOOGLE" && (
+    <>
+        {selected.rating !== undefined && (
+            <p>
+                Rating: ⭐ {selected.rating}
+            </p>
+        )}
+
+        {selected.address && (
+            <p className="mt-1">
+                {selected.address}
+            </p>
+        )}
+
+        {selected.website && (
+            <a
+                href={selected.website}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 inline-block rounded bg-blue-600 px-3 py-2 text-white"
+            >
+                Website
+            </a>
+        )}
+    </>
+)}
 
                         {"address" in selected && selected.address && (
 

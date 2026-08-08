@@ -2,6 +2,7 @@ import AppCard from "./ui/AppCard";
 import AppButton from "./ui/AppButton";
 import { useEffect, useState } from "react";
 import RecyclerMap from "./maps/RecyclerMap";
+import { getGoogleRecyclers } from "../services/googleRecyclerService";
 import { getAllRecyclers } from "../services/recyclerService";
 import { getPublicRecyclers } from "../services/matchingService";
 import { recommendRecyclers } from "../utils/recommendationEngine";
@@ -13,6 +14,7 @@ export default function CompareRecyclerModal({
 }) {
     const [verifiedRecyclers, setVerifiedRecyclers] = useState([]);
 const [publicRecyclers, setPublicRecyclers] = useState([]);
+const [googleRecyclers, setGoogleRecyclers] = useState([]);
 const [loading, setLoading] = useState(false);
   
   useEffect(() => {
@@ -20,44 +22,67 @@ const [loading, setLoading] = useState(false);
     if (!open || !waste) return;
 
     const loadRecyclers = async () => {
+    try {
+        setLoading(true);
 
-        try {
+        const [
+            verifiedResponse,
+            publicResponse,
+            googleResponse,
+        ] = await Promise.all([
+            getAllRecyclers(),
 
-            setLoading(true);
+            getPublicRecyclers(
+                waste.latitude,
+                waste.longitude
+            ),
 
-            const [verifiedResponse, publicResponse] =
-    await Promise.all([
-        getAllRecyclers(),
-        getPublicRecyclers(
-            waste.latitude,
-            waste.longitude
-        ),
-    ]);
+            getGoogleRecyclers(
+                waste.latitude,
+                waste.longitude
+            ),
+        ]);
 
-const ranked = recommendRecyclers(
-    verifiedResponse.data,
-    waste
-);
+        // -----------------------------
+        // EcoBridge Verified Recyclers
+        // -----------------------------
+        const ranked = recommendRecyclers(
+            verifiedResponse.data,
+            waste
+        );
 
-setVerifiedRecyclers(ranked);
+        setVerifiedRecyclers(ranked);
 
-setPublicRecyclers(
-    publicResponse.data
-);
+        // -----------------------------
+        // Public Recycling Centers
+        // -----------------------------
+        setPublicRecyclers(
+            publicResponse.data || []
+        );
 
-        } catch (err) {
+        // -----------------------------
+        // Google Listed Recyclers
+        // -----------------------------
+        setGoogleRecyclers(
+            googleResponse || []
+        );
 
-            console.error(err);
+    } catch (err) {
+        console.error(
+            "Failed to load recycler data:",
+            err
+        );
 
-        } finally {
+        setGoogleRecyclers([]);
 
-            setLoading(false);
+    } finally {
+        setLoading(false);
+    }
+};
 
-        }
+loadRecyclers();
 
-    };
-
-    loadRecyclers();
+    
 
 }, [open, waste]);
 if (!open || !waste) return null;
@@ -175,6 +200,7 @@ if (loading) {
     waste={waste}
     verifiedRecyclers={verifiedRecyclers}
     publicRecyclers={publicRecyclers}
+    googleRecyclers={googleRecyclers}
 />
 <div className="mt-8" />
 
