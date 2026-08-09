@@ -107,6 +107,21 @@ The frontend is deployed on **Vercel**, while the backend microservices are depl
 - 🏭 **Recycler Dashboard** — https://youtu.be/2-SqnhixZyE
 - 🐳 **Docker Desktop & Kubernetes** — https://youtu.be/r1P_vWOkgxM
 
+
+# 📝 Technical Documentation & Articles
+
+The development journey of EcoBridge Enterprise is documented through a series of technical articles covering the architecture, authentication, communication, deployment, observability and recycler discovery system.
+
+| # | Article | Topic |
+|---|---------|-------|
+| 1 | [Building EcoBridge Enterprise](https://divyanshhhh.hashnode.dev/article-1-the-story-of-ecobridge-s-transformation) | Project architecture and development journey |
+| 2 | [Why I Chose Microservices for EcoBridge Enterprise](https://divyanshhhh.hashnode.dev/article-2-how-i-designed-ecobridge-enterprise-with-spring-boot-microservices) | Microservices architecture |
+| 3 | [Authentication & Authorization in EcoBridge](https://divyanshhhh.hashnode.dev/article-3-building-authentication-for-ecobridge-enterprise-jwt-oauth2-and-refresh-tokens) | JWT, OAuth2 and Spring Security |
+| 4 | [Making Microservices Talk: OpenFeign, Kafka and Redis](https://divyanshhhh.hashnode.dev/article-4-making-microservices-talk-openfeign-kafka-and-redis-in-ecobridge-enterprise) | Service communication and infrastructure |
+| 5 | [Building Intelligent Recycler Discovery with Google Maps & Google Places](https://divyanshhhh.hashnode.dev/article-5-how-ecobridge-finds-recyclers-that-aren-t-registered-on-the-platform) | Geospatial discovery and external business data |
+| 6 | [From Docker Compose to Kubernetes](https://divyanshhhh.hashnode.dev/article-6-from-docker-compose-to-kubernetes-how-i-deployed-ecobridge-enterprise) | Containerization and deployment |
+| 7 | [Making Microservices Observable](https://divyanshhhh.hashnode.dev/article-7-making-ecobridge-observable-prometheus-grafana-and-actuator-in-a-spring-boot-microservices-system) | Actuator, Prometheus and Grafana |
+
 ---
 
 ## 🏗 System Architecture
