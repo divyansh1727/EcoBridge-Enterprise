@@ -9,16 +9,15 @@ A Cloud-Native Waste Management Platform built using a scalable Microservices Ar
 </p>
 
 <p align="center">
-![Java](https://img.shields.io/badge/Java-21-red)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen)
-![React](https://img.shields.io/badge/React-Vite-61DAFB)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-blue)
-![Redis](https://img.shields.io/badge/Redis-red)
-![Kafka](https://img.shields.io/badge/Kafka-black)
-![Docker](https://img.shields.io/badge/Docker-2496ED)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5)
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI/CD-blueviolet)
-
+  <img src="https://img.shields.io/badge/Java-21-red" alt="Java">
+  <img src="https://img.shields.io/badge/Spring_Boot-3.x-brightgreen" alt="Spring Boot">
+  <img src="https://img.shields.io/badge/React-Vite-61DAFB" alt="React">
+  <img src="https://img.shields.io/badge/PostgreSQL-blue" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Redis-red" alt="Redis">
+  <img src="https://img.shields.io/badge/Kafka-black" alt="Kafka">
+  <img src="https://img.shields.io/badge/Docker-2496ED" alt="Docker">
+  <img src="https://img.shields.io/badge/Kubernetes-326CE5" alt="Kubernetes">
+  <img src="https://img.shields.io/badge/GitHub_Actions-CI/CD-blueviolet" alt="GitHub Actions">
 </p>
 
 # EcoBridge Enterprise
@@ -685,17 +684,21 @@ The EcoBridge frontend provides dedicated experiences for public users, waste ge
 |---|---|
 | ![Waste Dashboard](docs/frontend/waste-dashboard.png) | ![Create Waste](docs/frontend/create-waste.png) |
 
-| My Waste | Browse Waste |
+| My Waste | Compare Recycler |
 |---|---|
-| ![My Waste](docs/frontend/MyWaste.png) | ![Browse Waste](docs/frontend/BrowseWaste.png) |
-
-| Reserve Waste | Complete Waste |
-|---|---|
-| ![Reserve Waste](docs/frontend/ReserveWaste.png) | ![Complete Waste](docs/frontend/CompleteWaste.png) |
+| ![My Waste](docs/frontend/MyWaste.png) | ![Compare Recycler](docs/frontend/CompareRecycler.png) |
 
 ### ♻️ Recycler Experience
 
 ![Recycler Dashboard](docs/frontend/recycler-dashboard.png)
+
+| Browse Waste | Reserve Waste |
+|---|---|
+| ![Browse Waste](docs/frontend/BrowseWaste.png) | ![Reserve Waste](docs/frontend/ReserveWaste.png) |
+
+| Complete Waste |
+|---|
+| ![Complete Waste](docs/frontend/CompleteWaste.png) |
 
 ### 👤 Profile & Authentication
 
@@ -711,8 +714,9 @@ The EcoBridge frontend provides dedicated experiences for public users, waste ge
 
 ![Kafka](docs/frontend/Kafka.png)
 
+---
 
-# 🗺️ Interactive Recycler Map
+## 🗺️ Interactive Recycler Map
 
 EcoBridge provides an interactive map that allows waste generators to
 visualize nearby recycling options directly around the waste pickup location.
@@ -738,13 +742,14 @@ Nearby locations are then displayed on the Google Map.
                         │
                         ▼
                  Recycler Details
+```
+
 ![EcoBridge Interactive Recycler Map](frontend/nearby-recycler-map.png)
 ![EcoBridge Interactive Recycler Map](frontend/nearby-recycler-map-website.png)
 
-
 ---
 
-## ☸ DevOps
+# ☸ DevOps Architecture
 
 ### Docker
 
@@ -897,6 +902,7 @@ EcoBridge Enterprise uses Docker, Kubernetes and GitHub Actions for containeriza
 
 ![Kubectl](docs/devops/Kubectl-cmd.png)
 
+---
 
 # 📊 Monitoring
 
@@ -917,6 +923,8 @@ EcoBridge uses Prometheus and Grafana for application and infrastructure monitor
 ### 🔥 Prometheus
 
 ![Prometheus](docs/monitoring/promotheus.png)
+
+---
 
 # 📘 Interactive API Documentation
 
@@ -1010,8 +1018,6 @@ architecture and routes requests to the appropriate microservice.
 
 **Gateway:**  
 https://ecobridge-enterprise-0.onrender.com
-
-
 
 ---
 
