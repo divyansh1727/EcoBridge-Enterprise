@@ -9,6 +9,17 @@ A Cloud-Native Waste Management Platform built using a scalable Microservices Ar
 </p>
 
 <p align="center">
+![Java](https://img.shields.io/badge/Java-21-red)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen)
+![React](https://img.shields.io/badge/React-Vite-61DAFB)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-blue)
+![Redis](https://img.shields.io/badge/Redis-red)
+![Kafka](https://img.shields.io/badge/Kafka-black)
+![Docker](https://img.shields.io/badge/Docker-2496ED)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI/CD-blueviolet)
+
+</p>
 
 # EcoBridge Enterprise
 
@@ -92,7 +103,7 @@ The frontend is deployed on **Vercel**, while the backend microservices are depl
 ## 🎥 Demo Videos
 
 - 🏠 **Complete Homepage & Analytics Dashboard** — https://youtu.be/3vPZGw2ThH0
-- ♻️ **Waste Generator Dashboard** — https://youtu.be/GoFReO6eWdU
+- ♻️ **Waste Generator Dashboard** — https://youtu.be/UOhaup6RQDA
 - 🏭 **Recycler Dashboard** — https://youtu.be/2-SqnhixZyE
 - 🐳 **Docker Desktop & Kubernetes** — https://youtu.be/r1P_vWOkgxM
 
@@ -552,21 +563,26 @@ This helps keep asynchronous processing separated from synchronous request flows
 
 ## 📖 Documentation
 
+The project documentation is organized into dedicated guides covering the
+architecture, APIs, deployment, observability and external map integrations.
+
 | Document | Description |
 |---|---|
-| 📐 Architecture | Overall microservices architecture |
-| 🔄 Workflow | Complete system workflow |
-| 🔌 API Reference | REST API documentation |
-| 📘 Swagger Guide | Interactive API documentation |
-| 🚀 Deployment Guide | Docker, Kubernetes and cloud deployment |
-| 📊 Observability | Prometheus, Grafana and monitoring |
-| 🗺️ Maps & Recycler Discovery | Google Maps, Google Places and OpenStreetMap integration |
+| 📐 [Architecture](docs/architecture.md) | Overall microservices architecture and service interactions |
+| 🔄 [System Workflow](docs/architecture.md) | Complete EcoBridge request and matching workflow |
+| 🔌 [API Reference](docs/api.md) | REST API endpoints and service interfaces |
+| 📘 [Swagger Guide](docs/swagger.md) | Interactive Swagger/OpenAPI documentation for each service |
+| 🚀 [Deployment Guide](docs/deployment.md) | Docker, Kubernetes, Render and deployment configuration |
+| 📊 [Observability](docs/observability.md) | Prometheus, Grafana, Actuator and application monitoring |
+| 🗺️ [Maps & Recycler Discovery](docs/maps.md) | Google Maps, Google Places and OpenStreetMap-based recycler discovery |
 
-### 📘 Interactive API Documentation
+## 📘 Interactive API Documentation
 
-The backend services expose REST APIs built with Spring Boot. Swagger/OpenAPI documentation can be used to inspect and test API endpoints.
+The backend services expose REST APIs built with Spring Boot. Swagger/OpenAPI
+documentation is available for the individual microservices, allowing
+developers to inspect endpoints, request models, responses and test APIs.
 
-➡️ **View Swagger Documentation**
+➡️ **[View Swagger Documentation](docs/swagger.md)**
 
 ---
 
@@ -643,43 +659,88 @@ The backend services expose REST APIs built with Spring Boot. Swagger/OpenAPI do
 
 ---
 
-## 📷 Frontend Gallery
+# 📷 Frontend Gallery
 
-The frontend contains separate experiences for public users, generators and recyclers.
+The EcoBridge frontend provides dedicated experiences for public users, waste generators and recyclers.
 
 ### 🌐 Public Pages
 
-| Page | Screenshot |
+| Home | Login | Register |
+|---|---|---|
+| ![Home](docs/frontend/Home.png) | ![Login](docs/frontend/Login.png) | ![Register](docs/frontend/Register.png) |
+
+### 🏠 Homepage
+
+![Home](docs/frontend/Home1.png)
+
+![Home](docs/frontend/Home2.png)
+
+![Home](docs/frontend/Home3.png)
+
+![Home](docs/frontend/Home4.png)
+
+### 👤 Generator Experience
+
+| Dashboard | Create Waste |
 |---|---|
-| Home | Add screenshot |
-| Login | Add screenshot |
-| Register | Add screenshot |
+| ![Waste Dashboard](docs/frontend/waste-dashboard.png) | ![Create Waste](docs/frontend/create-waste.png) |
 
-### 👤 Generator
-
-| Page | Screenshot |
+| My Waste | Browse Waste |
 |---|---|
-| Generator Dashboard | Add screenshot |
-| Create Waste | Add screenshot |
-| My Waste | Add screenshot |
-| Waste Details | Add screenshot |
-| Recycler Comparison | Add screenshot |
-| Nearby Recycler Map | Add screenshot |
-| Profile | Add screenshot |
-| Notifications | Add screenshot |
+| ![My Waste](docs/frontend/MyWaste.png) | ![Browse Waste](docs/frontend/BrowseWaste.png) |
 
-### 🏭 Recycler
-
-| Page | Screenshot |
+| Reserve Waste | Complete Waste |
 |---|---|
-| Recycler Dashboard | Add screenshot |
-| Browse Waste | Add screenshot |
-| Waste Details | Add screenshot |
-| My Pickups | Add screenshot |
-| Pickup History | Add screenshot |
-| Recycler Profile | Add screenshot |
-| Recycler Details | Add screenshot |
-| Notifications | Add screenshot |
+| ![Reserve Waste](docs/frontend/ReserveWaste.png) | ![Complete Waste](docs/frontend/CompleteWaste.png) |
+
+### ♻️ Recycler Experience
+
+![Recycler Dashboard](docs/frontend/recycler-dashboard.png)
+
+### 👤 Profile & Authentication
+
+| Profile | OAuth |
+|---|---|
+| ![Profile](docs/frontend/Profile.png) | ![OAuth](docs/frontend/Oauth.png) |
+
+### 🔔 Notifications
+
+![Notifications](docs/frontend/Notification.png)
+
+### 📨 Kafka
+
+![Kafka](docs/frontend/Kafka.png)
+
+
+# 🗺️ Interactive Recycler Map
+
+EcoBridge provides an interactive map that allows waste generators to
+visualize nearby recycling options directly around the waste pickup location.
+
+The map combines recycler information from multiple sources and visually
+separates them using different markers.
+
+### 📍 Map Overview
+
+The waste pickup location is used as the center of the discovery process.
+Nearby locations are then displayed on the Google Map.
+
+```text
+                    Google Map
+                        │
+          ┌─────────────┼─────────────┐
+          │             │             │
+          ▼             ▼             ▼
+      🔴 Waste      🟢 EcoBridge    🟠 Google
+       Location       Recycler       Business
+          │             │             │
+          └─────────────┼─────────────┘
+                        │
+                        ▼
+                 Recycler Details
+![EcoBridge Interactive Recycler Map](frontend/nearby-recycler-map.png)
+![EcoBridge Interactive Recycler Map](frontend/nearby-recycler-map-website.png)
+
 
 ---
 
@@ -809,6 +870,148 @@ GitHub Actions
           ▼                     ▼
     Service Metrics       System Metrics
 ```
+
+# ☸ DevOps
+
+EcoBridge Enterprise uses Docker, Kubernetes and GitHub Actions for containerization, orchestration and CI/CD.
+
+### 🐳 Docker
+
+| Docker Images | Docker Hub |
+|---|---|
+| ![Docker Images](docs/devops/docker-images.png) | ![Docker Hub](docs/devops/dockerHub.png) |
+
+### ⚙️ CI/CD & Service Discovery
+
+| GitHub Actions | Eureka Dashboard |
+|---|---|
+| ![GitHub Actions](docs/devops/github-actions.png) | ![Eureka Dashboard](docs/devops/eureka-dashboard.png) |
+
+### ☸ Kubernetes
+
+| Kubernetes Dashboard | Kubernetes Pods |
+|---|---|
+| ![Kubernetes Dashboard](docs/devops/Kubernetes-dashboard.png) | ![Kubernetes Pods](docs/devops/Kubernetes-pods.png) |
+
+### 💻 Kubectl
+
+![Kubectl](docs/devops/Kubectl-cmd.png)
+
+
+# 📊 Monitoring
+
+EcoBridge uses Prometheus and Grafana for application and infrastructure monitoring.
+
+### 📈 Grafana
+
+| Grafana Authentication | Grafana Metrics |
+|---|---|
+| ![Grafana Authentication](docs/monitoring/grafana-auth.png) | ![Grafana Metrics](docs/monitoring/grafana-metrics-1.png) |
+
+![Grafana Metrics](docs/monitoring/grafana-metrics-2.png)
+
+### 🖥️ CPU Metrics
+
+![CPU Metrics](docs/monitoring/cpu-metrics.png)
+
+### 🔥 Prometheus
+
+![Prometheus](docs/monitoring/promotheus.png)
+
+# 📘 Interactive API Documentation
+
+EcoBridge exposes its backend through multiple Spring Boot microservices.
+Each service provides its own Swagger/OpenAPI interface, making it easy to
+explore endpoints, inspect request/response models and test APIs independently.
+
+The following screenshots show the Swagger documentation available across the
+core EcoBridge services.
+
+---
+
+### 🔐 Auth Service
+
+Handles authentication, JWT-based security, OAuth2 login and user-related operations.
+
+**Swagger:**  
+https://ecobridge-enterprise-2.onrender.com/swagger-ui/index.html
+
+![Auth Service Swagger](docs/swagger/auth-swagger.png)
+
+---
+
+### ♻️ Waste Service
+
+Manages waste creation, updates, availability, reservations and pickup-related
+operations for waste generators.
+
+**Swagger:**  
+https://ecobridge-enterprise-3.onrender.com/swagger-ui/index.html
+
+![Waste Service Swagger](docs/swagger/waste-swagger.png)
+
+---
+
+### 🏭 Recycler Service
+
+Handles recycler registration, recycler profiles, accepted waste types,
+capacity management and recycler discovery.
+
+**Swagger:**  
+https://ecobridge-enterprise-4.onrender.com/swagger-ui/index.html
+
+![Recycler Service Swagger](docs/swagger/recycler-swagger.png)
+
+---
+
+### 🎯 Matching Service
+
+Provides the intelligent matching layer that connects waste with suitable
+recyclers based on location, availability and matching criteria.
+
+It also integrates recycler discovery from EcoBridge's registered recyclers
+along with external location sources such as Google Places and OpenStreetMap.
+
+**Swagger:**  
+https://ecobridge-enterprise-6.onrender.com/swagger-ui/index.html
+
+![Matching Service Swagger](docs/swagger/matching-swagger.png)
+
+---
+
+### 🔔 Notification Service
+
+Handles application notifications and event-driven communication between
+the platform's services.
+
+**Swagger:**  
+https://ecobridge-enterprise-5.onrender.com/swagger-ui/index.html
+
+![Notification Service Swagger](docs/swagger/notification-swagger.png)
+
+---
+
+### 📊 Analytics Service
+
+Provides analytics and operational insights generated from activity across
+the EcoBridge platform.
+
+**Swagger:**  
+https://ecobridge-enterprise-7.onrender.com/swagger-ui/index.html
+
+![Analytics Service Swagger](docs/swagger/analytics-swagger.png)
+
+---
+
+### 🚪 API Gateway
+
+The API Gateway acts as the public entry point for the deployed backend
+architecture and routes requests to the appropriate microservice.
+
+**Gateway:**  
+https://ecobridge-enterprise-0.onrender.com
+
+
 
 ---
 
