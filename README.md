@@ -88,6 +88,7 @@ EcoBridge helps users manage the complete recycling workflow:
 |---|---|
 | 🌐 Frontend | https://ebe-mauve.vercel.app |
 | 🚪 API Gateway | https://ecobridge-enterprise-0.onrender.com |
+| 📊 Discovery Server | https://ecobridge-enterprise-1.onrender.com |
 | 🔐 Auth Service | https://ecobridge-enterprise-2.onrender.com |
 | ♻️ Waste Service | https://ecobridge-enterprise-3.onrender.com |
 | 🏭 Recycler Service | https://ecobridge-enterprise-4.onrender.com |
@@ -744,8 +745,8 @@ Nearby locations are then displayed on the Google Map.
                  Recycler Details
 ```
 
-![EcoBridge Interactive Recycler Map](frontend/nearby-recycler-map.png)
-![EcoBridge Interactive Recycler Map](frontend/nearby-recycler-map-website.png)
+![EcoBridge Interactive Recycler Map](docs/frontend/nearby-recycler-map.png)
+![EcoBridge Interactive Recycler Map](docs/frontend/nearby-recycler-map-website.png)
 
 ---
 
